@@ -313,3 +313,18 @@ VALUES
 	(@Playlist05, @Video03),
 	(@Playlist05, @Video06);
 GO
+
+UPDATE Channel
+SET ChannelID = 'B85F26E6-B7B1-43D3-895F-F8DE4DBCB90F'
+WHERE Handle = 'juantech'
+GO
+
+UPDATE UserAccount
+SET UserID = 'C9237A7B-9A1D-4515-B4F7-A4B5B707DA91'
+WHERE UserName = 'neider01'
+GO
+
+UPDATE Video
+SET VideoID = '06C251F7-C35D-4351-ABF4-5BA5EA5A2553'
+WHERE Title = 'Intro a SQL'
+GO
