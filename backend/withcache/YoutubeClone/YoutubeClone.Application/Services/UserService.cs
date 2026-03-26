@@ -22,8 +22,30 @@ namespace YoutubeClone.Application.Services
                 Country = model.Country,
                 Password = model.Password,
                 CreatedAt = DateTimeHelper.UtcNow(),
-                DeletedAt = DateTimeHelper.UtcNow(),
+                DeletedAt = null,
             };
+
+            // Validación username y correo repetidos
+            var users = cache.Get();
+            if (users.Any(user => user.UserName == model.UserName)) //recorrido para ver si alguno tiene el mismo username
+            {
+                return ResponseHelper.Create(user, "Este username ya existe"); //encontrado, muestra error
+            }
+            if (users.Any(user => user.Email == model.Email))
+            {
+                return ResponseHelper.Create(user, "Este email ya fue registrado");
+            }
+
+            // Validación - Restricción de edad al crear cuenta
+            var age = DateTime.Today.Year - model.Birthday.Year;
+            if (model.Birthday > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+            if (age < 13)
+            {
+                return ResponseHelper.Create(user, "La edad mínima es 13 años");
+            }
 
             cache.Add(user.UserId.ToString(), user);
             return ResponseHelper.Create(user);
@@ -53,5 +75,7 @@ namespace YoutubeClone.Application.Services
             cache.Delete(userId.ToString());
             return ResponseHelper.Create(true);
         }
+
+
     }
 }

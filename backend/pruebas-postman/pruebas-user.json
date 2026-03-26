@@ -1,0 +1,156 @@
+{
+  "info": {
+    "_postman_id": "86182579-c31e-483b-9d97-77e168748689",
+    "name": "api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53458799",
+    "_collection_link": "https://go.postman.co/collection/53458799-86182579-c31e-483b-9d97-77e168748689?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userName\": \"usuario1\",\r\n  \"displayName\": \"Juan1\",\r\n  \"email\": \"juan@email.com\",\r\n  \"birthday\": \"1995-05-10\",\r\n  \"country\": \"Ecuador\",\r\n  \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:7238/api/user",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7238",
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetAll Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7238/api/user?limit=10&offset=0",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7238",
+              "path": [
+                "api",
+                "user"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "userName",
+                  "value": "juan",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "email",
+                  "value": "example",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "country",
+                  "value": "Ecuador",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://localhost:7238/api/user/12ac6aee-18df-4cea-97fc-33c26f03e586",
+              "protocol": "https",
+              "host": [
+                "localhost"
+              ],
+              "port": "7238",
+              "path": [
+                "api",
+                "user",
+                "12ac6aee-18df-4cea-97fc-33c26f03e586"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"displayName\": \"Juan Actualizado\",\r\n  \"email\": \"juan.nuevo@example.com\",\r\n  \"country\": \"Peru\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5297/api/users/11111111-1111-1111-1111-111111111111",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5297",
+          "path": [
+            "api",
+            "users",
+            "11111111-1111-1111-1111-111111111111"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
