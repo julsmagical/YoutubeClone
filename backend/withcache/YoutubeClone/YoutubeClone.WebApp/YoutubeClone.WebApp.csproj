@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YoutubeClone.Application\YoutubeClone.Application.csproj" />
-    <ProjectReference Include="..\YoutubeClone.Domain\YoutubeClone.Domain.csproj" />
   </ItemGroup>
 
 </Project>
