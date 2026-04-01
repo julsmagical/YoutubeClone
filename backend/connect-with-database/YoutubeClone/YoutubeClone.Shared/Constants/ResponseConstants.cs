@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace YoutubeClone.Shared.Constants
+﻿namespace YoutubeClone.Shared.Constants
 {
-    internal class ResponseConstants
+    public static class ResponseConstants
     {
+        public const string USER_NOT_EXIST = "El usuario no existe";
+
+        public const string CHANNEL_NOT_EXIST = "El canal no existe";
     }
 }

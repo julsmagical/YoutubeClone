@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using YoutubeClone.Domain.Database.SqlServer.Entities;
 
 namespace YoutubeClone.Domain.Interfaces.Repositories
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
+        Task<UserAccount> Create(UserAccount userAccount);
+        Task<UserAccount?> Get(Guid userId);
+        IQueryable<UserAccount> Queryable();
+        Task<bool> IfExist(Guid userId);
+        Task<bool> IfExist(string userName);
+        Task<UserAccount> Update(UserAccount userAccount);
     }
 }

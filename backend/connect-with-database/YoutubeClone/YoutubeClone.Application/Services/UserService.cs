@@ -3,12 +3,11 @@ using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Models.DTOS;
 using YoutubeClone.Application.Models.Requests.User;
 using YoutubeClone.Application.Models.Responses;
-using YoutubeClone.Shared;
 using YoutubeClone.Shared.Helpers;
 
 namespace YoutubeClone.Application.Services
 {
-    public class UserService(Cache<UserDTO> cache) : IUserService
+    public class UserService(IUserRepository repository) : IUserService
     {
         public GenericResponse<UserDTO> Create(CreateUserRequest model)
         {

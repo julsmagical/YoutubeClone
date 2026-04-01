@@ -9,12 +9,9 @@ namespace YoutubeClone.Application.Helpers
             var response = new GenericResponse<T>
             {
                 Data = data,
-                Message = message,
+                Message = message
             };
             return response;
         }
-
-
-
     }
 }
