@@ -1,10 +1,20 @@
-﻿namespace YoutubeClone.WebApp.Middlewares
+﻿using YoutubeClone.Domain.Exceptions;
+
+namespace YoutubeClone.WebApp.Middlewares
 {
     public class ErrorHandleMiddleware : IMiddleware
     {
-        public Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await next(context);
+            }
+            catch (NotFoundException exception)
+            {
+
+                throw;
+            }
         }
     }
 }

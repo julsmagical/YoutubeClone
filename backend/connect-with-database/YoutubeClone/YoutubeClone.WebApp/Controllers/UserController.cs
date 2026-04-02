@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
-using YoutubeClone.Application.Models.Request.Users;
 using YoutubeClone.Application.Models.Requests.User;
 
 namespace YoutubeClone.WebApp.Controllers
@@ -13,27 +11,35 @@ namespace YoutubeClone.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest model)
         {
-            var rsp = userService.Create(model);
+            var rsp = await userService.Create(model);
             return Ok(rsp);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var rsp = userService.Delete(id);
+            var rsp = await userService.Delete(id);
             return Ok(rsp);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllUserRequest model)
+        public async Task<IActionResult> GetAll([FromQuery] FilterUserRequest model)
         {
-            return Ok(ResponseHelper.Create(userService.Get(model.Limit, model.Offset)));
+            var rsp = await userService.GetAll(model);
+            return Ok(rsp);
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var rsp = userService.Get(id);
+            var rsp = await userService.GetById(id);
+            return Ok(rsp);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, UpdateUserRequest model)
+        {
+            var rsp = await userService.Update(id, model);
             return Ok(rsp);
         }
     }

@@ -6,9 +6,10 @@ namespace YoutubeClone.Domain.Interfaces.Repositories
     {
         Task<UserAccount> Create(UserAccount userAccount);
         Task<UserAccount?> Get(Guid userId);
-        IQueryable<UserAccount> Queryable();
+        Task<UserAccount> Update(UserAccount userAccount);
         Task<bool> IfExist(Guid userId);
         Task<bool> IfExist(string userName);
-        Task<UserAccount> Update(UserAccount userAccount);
+        IQueryable<UserAccount> Queryable();
+
     }
 }

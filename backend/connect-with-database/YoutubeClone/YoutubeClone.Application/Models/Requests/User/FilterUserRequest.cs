@@ -5,7 +5,7 @@
         public string? UserName { get; set; }
         public string? DisplayName { get; set; }
         public string? Email { get; set; }
-        public DateTime? Birthdate { get; set; }
-        public string? Country { get; set; }
+        public DateTime? Birthday { get; set; }
+        public string? Location { get; set; }
     }
 }
