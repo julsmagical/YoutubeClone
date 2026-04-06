@@ -3,7 +3,7 @@ using YoutubeClone.Domain.Database.SqlServer.Context;
 using YoutubeClone.Domain.Database.SqlServer.Entities;
 using YoutubeClone.Domain.Interfaces.Repositories;
 
-namespace YoutubeClone.Infraestructure.Persistence.SqlServer
+namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
 {
     public class UserRepository(YoutubeCloneContext context) : IUserRepository
     {

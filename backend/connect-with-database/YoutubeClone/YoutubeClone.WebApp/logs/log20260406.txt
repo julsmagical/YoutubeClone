@@ -1,0 +1,66 @@
+2026-04-06 11:36:53.872 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:36:53.995 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:36:53.995 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:36:53.995 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:37:28.313 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:37:28.444 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:37:28.444 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:37:28.445 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:38:59.340 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:38:59.486 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:38:59.487 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:38:59.487 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:40:53.784 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:40:53.971 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:40:53.975 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:40:53.977 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:48:19.323 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:48:19.467 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:48:19.469 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:48:19.472 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:53:06.668 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:53:06.803 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:53:06.806 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:53:06.808 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:53:26.347 -05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5023/api/user - application/json 166
+2026-04-06 11:53:26.424 -05:00 [WRN] Failed to determine the https port for redirect.
+2026-04-06 11:53:26.432 -05:00 [INF] Executing endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:53:26.502 -05:00 [INF] Route matched with {action = "Create", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(YoutubeClone.Application.Models.Requests.User.CreateUserRequest) on controller YoutubeClone.WebApp.Controllers.UserController (YoutubeClone.WebApp).
+2026-04-06 11:53:26.847 -05:00 [INF] Executing BadRequestObjectResult, writing value of type 'YoutubeClone.Application.Models.Responses.GenericResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-06 11:53:26.871 -05:00 [INF] Executed action YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp) in 348.7791ms
+2026-04-06 11:53:26.897 -05:00 [INF] Executed endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:53:26.906 -05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5023/api/user - 400 null application/json; charset=utf-8 562.926ms
+2026-04-06 11:55:11.079 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:55:11.255 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:55:11.258 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:55:11.260 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:55:29.960 -05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5023/api/user - application/json 166
+2026-04-06 11:55:30.267 -05:00 [WRN] Failed to determine the https port for redirect.
+2026-04-06 11:55:30.286 -05:00 [INF] Executing endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:55:30.855 -05:00 [INF] Route matched with {action = "Create", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(YoutubeClone.Application.Models.Requests.User.CreateUserRequest) on controller YoutubeClone.WebApp.Controllers.UserController (YoutubeClone.WebApp).
+2026-04-06 11:55:31.993 -05:00 [INF] Executing BadRequestObjectResult, writing value of type 'YoutubeClone.Application.Models.Responses.GenericResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-06 11:55:32.062 -05:00 [INF] Executed action YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp) in 1194.2544ms
+2026-04-06 11:55:32.284 -05:00 [INF] Executed endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:55:32.324 -05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5023/api/user - 400 null application/json; charset=utf-8 2355.057ms
+2026-04-06 11:58:07.899 -05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5023/api/user - application/json 166
+2026-04-06 11:58:07.908 -05:00 [INF] Executing endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:58:07.913 -05:00 [INF] Route matched with {action = "Create", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(YoutubeClone.Application.Models.Requests.User.CreateUserRequest) on controller YoutubeClone.WebApp.Controllers.UserController (YoutubeClone.WebApp).
+2026-04-06 11:58:08.062 -05:00 [INF] Executing BadRequestObjectResult, writing value of type 'YoutubeClone.Application.Models.Responses.GenericResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-06 11:58:08.067 -05:00 [INF] Executed action YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp) in 149.5519ms
+2026-04-06 11:58:08.070 -05:00 [INF] Executed endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:58:08.074 -05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5023/api/user - 400 null application/json; charset=utf-8 175.1411ms
+2026-04-06 11:58:38.070 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-06 11:58:38.433 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-06 11:58:38.436 -05:00 [INF] Hosting environment: Development
+2026-04-06 11:58:38.441 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-06 11:58:48.484 -05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5023/api/user - application/json 171
+2026-04-06 11:58:48.738 -05:00 [WRN] Failed to determine the https port for redirect.
+2026-04-06 11:58:48.748 -05:00 [INF] Executing endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:58:49.454 -05:00 [INF] Route matched with {action = "Create", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(YoutubeClone.Application.Models.Requests.User.CreateUserRequest) on controller YoutubeClone.WebApp.Controllers.UserController (YoutubeClone.WebApp).
+2026-04-06 11:58:50.274 -05:00 [INF] Executing BadRequestObjectResult, writing value of type 'YoutubeClone.Application.Models.Responses.GenericResponse`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-06 11:58:50.306 -05:00 [INF] Executed action YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp) in 836.4908ms
+2026-04-06 11:58:50.353 -05:00 [INF] Executed endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:58:50.364 -05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5023/api/user - 400 null application/json; charset=utf-8 1885.488ms
+2026-04-06 11:59:08.080 -05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5023/api/user - application/json 172
+2026-04-06 11:59:08.096 -05:00 [INF] Executing endpoint 'YoutubeClone.WebApp.Controllers.UserController.Create (YoutubeClone.WebApp)'
+2026-04-06 11:59:08.100 -05:00 [INF] Route matched with {action = "Create", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Create(YoutubeClone.Application.Models.Requests.User.CreateUserRequest) on controller YoutubeClone.WebApp.Controllers.UserController (YoutubeClone.WebApp).

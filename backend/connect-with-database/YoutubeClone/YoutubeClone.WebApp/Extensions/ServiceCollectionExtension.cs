@@ -1,8 +1,12 @@
-﻿using YoutubeClone.Application.Interfaces.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using YoutubeClone.Application.Helpers;
+using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Services;
 using YoutubeClone.Domain.Database.SqlServer.Context;
 using YoutubeClone.Domain.Interfaces.Repositories;
-using YoutubeClone.Infraestructure.Persistence.SqlServer;
+using YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories;
+using YoutubeClone.Shared.Constants;
 using YoutubeClone.WebApp.Middlewares;
 
 namespace YoutubeClone.WebApp.Extensions
@@ -35,19 +39,44 @@ namespace YoutubeClone.WebApp.Extensions
             services.AddScoped<ErrorHandleMiddleware>();
         }
 
+        public static void AddLogging(this IServiceCollection services)
+        {
+            services.AddSerilog();
+            Log.Logger = new LoggerConfiguration()
+                //File
+                .WriteTo.Console()
+                //Archivos
+                .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "logs", "log.txt"), rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+        }
+
         /// <summary>
         /// Agrega lo que la api necesita para funcionar
         /// </summary>
         /// <param name="services"></param>
         public static void AddCore(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = (errorContext) =>
+                {
+                    var errors = errorContext.ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage).ToList()).ToList();
+                    var response = ResponseHelper.Create(
+                        data: ValidationConstants.VALIDATION_MESSAGE,
+                        errors: errors,
+                        message: ValidationConstants.VALIDATION_MESSAGE);
+                    return new BadRequestObjectResult(response);
+                };
+            });
             services.AddOpenApi();
             services.AddSqlServer<YoutubeCloneContext>(configuration.GetConnectionString("Database"));
 
             services.AddRepositories();
             services.AddServices();
             services.AddMiddlewares();
+
+            AddLogging(services);
         }
     }
 }

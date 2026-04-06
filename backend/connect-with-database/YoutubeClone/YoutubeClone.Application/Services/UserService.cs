@@ -16,6 +16,7 @@ namespace YoutubeClone.Application.Services
     {
         public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
         {
+
             /*var queryable = repository.Queryable();
 
             bool userNameExists = queryable.Any(u => u.UserName == model.UserName.ToLower());
@@ -41,6 +42,8 @@ namespace YoutubeClone.Application.Services
                 return ResponseHelper.Create<UserDTO>(null, "La edad mínima es 13 años");
             }*/
 
+            //throw new Exception("La base de datos no se pudo conectar con el servicio");
+
             var create = await repository.Create(new UserAccount
             {
                 UserId = Guid.NewGuid(),
@@ -54,7 +57,7 @@ namespace YoutubeClone.Application.Services
                 DeletedAt = null,
             });
 
-            return ResponseHelper.Create(Map(create), "Usuario creado correctamente.");
+            return ResponseHelper.Create(Map(create), [], "Usuario creado correctamente.");
         }
 
         public async Task<GenericResponse<bool>> Delete(Guid id)
