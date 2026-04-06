@@ -1,5 +1,6 @@
 using Serilog;
 using YoutubeClone.WebApp.Extensions;
+using YoutubeClone.WebApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<ErrorHandleMiddleware>();
 
 app.UseHttpsRedirection();
 

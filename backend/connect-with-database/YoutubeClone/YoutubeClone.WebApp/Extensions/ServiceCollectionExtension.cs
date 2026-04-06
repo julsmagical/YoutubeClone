@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Serilog.Sinks.MSSqlServer;
 using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Services;
@@ -43,6 +44,8 @@ namespace YoutubeClone.WebApp.Extensions
         {
             services.AddSerilog();
             Log.Logger = new LoggerConfiguration()
+                .WriteTo.MSSqlServer(connectionString: "Server=localhost,1433;User=sa;Password=Admin1234@;Database=YoutubeClone;TrustServerCertificate=True;",
+                sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents", AutoCreateSqlTable = true })
                 //File
                 .WriteTo.Console()
                 //Archivos
