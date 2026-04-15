@@ -15,23 +15,22 @@ namespace YoutubeClone.WebApp.Middlewares
             }
             catch (NotFoundException exception)
             {
-                /*var response = ResponseHelper.Create(exception.Message);
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
-                await context.Response.WriteAsJsonAsync(response);*/
                 await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status404NotFound));
             }
             catch (BadRequestException exception)
             {
-                /*var response = ResponseHelper.Create(exception.Message);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await context.Response.WriteAsJsonAsync(response);*/
                 await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status400BadRequest));
+            }
+            catch (UnauthorizedException exception)
+            {
+                await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status401Unauthorized));
             }
             catch (Exception exception)
             {
                 var traceId = Guid.NewGuid();
                 var message = ResponseConstants.ERROR_UNEXPECTED(traceId.ToString());
-                logger.LogCritical("Se genero una excepcion no controlada con el traceId: {traceId}, Excepcion: {exception}", traceId, exception);
+
+                logger.LogInformation("Se generó una excepción no controlada, con el traceId: {traceId}. Excepción: {exception}", traceId, exception);
 
                 await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status500InternalServerError, message));
             }
@@ -48,7 +47,5 @@ namespace YoutubeClone.WebApp.Middlewares
             context.Response.StatusCode = statusCode;
             return response;
         }
-
-
     }
 }

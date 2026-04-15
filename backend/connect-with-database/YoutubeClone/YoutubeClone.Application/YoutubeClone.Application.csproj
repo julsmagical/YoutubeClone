@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YoutubeClone.Domain\YoutubeClone.Domain.csproj" />
+    <ProjectReference Include="..\YoutubeClone.Infraestructure\YoutubeClone.Infraestructure.csproj" />
     <ProjectReference Include="..\YoutubeClone.Shared\YoutubeClone.Shared.csproj" />
   </ItemGroup>
 

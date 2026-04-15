@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Microsoft.Extensions.Configuration;
+using System.Globalization;
 using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Models.DTOS;
@@ -7,16 +8,17 @@ using YoutubeClone.Application.Models.Responses;
 using YoutubeClone.Domain.Database.SqlServer.Entities;
 using YoutubeClone.Domain.Exceptions;
 using YoutubeClone.Domain.Interfaces.Repositories;
+using YoutubeClone.Shared;
 using YoutubeClone.Shared.Constants;
 using YoutubeClone.Shared.Helpers;
 
 namespace YoutubeClone.Application.Services
 {
-    public class UserService(IUserRepository repository) : IUserService
+    public class UserService(IUserRepository repository, IConfiguration configuration) : IUserService
     {
         public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
         {
-
+            // VALIDACIONES
             /*var queryable = repository.Queryable();
 
             bool userNameExists = queryable.Any(u => u.UserName == model.UserName.ToLower());
@@ -71,7 +73,7 @@ namespace YoutubeClone.Application.Services
             return ResponseHelper.Create(true);
         }
 
-        public async Task<GenericResponse<List<UserDTO>>> GetAll(FilterUserRequest model)
+        public GenericResponse<List<UserDTO>> GetAll(FilterUserRequest model)
         {
             var queryable = repository.Queryable();
 
@@ -124,7 +126,7 @@ namespace YoutubeClone.Application.Services
 
         private async Task<UserAccount> GetUser(Guid id)
         {
-            return await repository.Get(id)
+            return await repository.GetById(id)
                 ?? throw new NotFoundException(ResponseConstants.USER_NOT_EXIST);
         }
 
@@ -141,6 +143,37 @@ namespace YoutubeClone.Application.Services
                 Password = user.Password,
                 CreatedAt = user.CreatedAt,
             };
+        }
+
+        public async Task CreateFirstUser()
+        {
+            var hasCreated = await repository.HasCreated();
+            if (hasCreated) return;
+
+            var userName = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_USERNAME]
+                ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_USERNAME));
+
+            var displayName = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_DISPLAYNAME]
+                ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_DISPLAYNAME));
+
+            var email = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_EMAIL]
+                ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_EMAIL));
+
+            var password = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD]
+                ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD));
+
+            await repository.Create(new UserAccount
+            {
+                UserName = userName,
+                DisplayName = displayName,
+                Email = email,
+                Password = Hasher.HashPassword(password)
+            });
+        }
+
+        Task<GenericResponse<List<UserDTO>>> IUserService.GetAll(FilterUserRequest model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

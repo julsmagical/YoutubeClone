@@ -1,0 +1,18 @@
+2026-04-14 14:06:41.180 -05:00 [INF] Now listening on: http://localhost:5023
+2026-04-14 14:06:41.246 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-14 14:06:41.247 -05:00 [INF] Hosting environment: Development
+2026-04-14 14:06:41.249 -05:00 [INF] Content root path: C:\Users\ASUS\Documents\NewWorkspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp
+2026-04-14 23:32:04.951 -05:00 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-14 23:32:04.986 -05:00 [INF] Creating key {05e58ac6-24cc-45cc-b9a7-0c8b1b4f3339} with creation date 2026-04-15 04:32:04Z, activation date 2026-04-15 04:32:04Z, and expiration date 2026-07-14 04:32:04Z.
+2026-04-14 23:32:05.002 -05:00 [INF] Writing data to file 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys\key-05e58ac6-24cc-45cc-b9a7-0c8b1b4f3339.xml'.
+2026-04-14 23:32:05.022 -05:00 [INF] Executed DbCommand (46ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserAccount] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-04-14 23:32:05.088 -05:00 [INF] Now listening on: http://localhost:5063
+2026-04-14 23:32:05.118 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-14 23:32:05.121 -05:00 [INF] Hosting environment: Development
+2026-04-14 23:32:05.122 -05:00 [INF] Content root path: C:\Users\ASUS\Documents\NewWorkspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp

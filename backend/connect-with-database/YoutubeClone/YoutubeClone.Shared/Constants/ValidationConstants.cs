@@ -2,11 +2,10 @@
 {
     public static class ValidationConstants
     {
-        public const string MAX_LENGTH = "El máximo de caracteres es de {0} es de {1}";
+        public const string MAX_LENGTH = "El máximo de caracteres de {0} es {1}";
         public const string MIN_LENGTH = "El mínimo de caracteres de {0} es {1}";
         public const string REQUIRED = "La propiedad {0} es requerida";
-        public const string EMAIL = "Email no válido";
-        public const string VALIDATION_MESSAGE = "Una o mas validaciones necesitan atencion";
+        public const string EMAIL = "La dirección de correo no es correcta {0}";
+        public const string VALIDATION_MESSAGE = "Una o más validaciones necesitan atención";
     }
-
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Models.Requests.User;
 
@@ -6,6 +7,7 @@ namespace YoutubeClone.WebApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpPost]
@@ -37,7 +39,7 @@ namespace YoutubeClone.WebApp.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, UpdateUserRequest model)
+        public async Task<IActionResult> Update([FromBody] UpdateUserRequest model, Guid id)
         {
             var rsp = await userService.Update(id, model);
             return Ok(rsp);

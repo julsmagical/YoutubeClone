@@ -23,15 +23,38 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
             }
         }
 
-        public async Task<UserAccount?> Get(Guid userId)
+        public async Task<UserAccount?> GetById(Guid collaboratorId)
         {
             try
             {
-                return await context.UserAccounts.FirstOrDefaultAsync(x => x.UserId == userId && x.DeletedAt == null);
+                return await context.UserAccounts.FirstOrDefaultAsync(x => x.UserId == collaboratorId && x.DeletedAt == null);
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
 
+        public async Task<UserAccount?> GetAll(string email)
+        {
+            try
+            {
+                return await context.UserAccounts.FirstOrDefaultAsync(x => x.Email == email && x.DeletedAt == null);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> HasCreated()
+        {
+            try
+            {
+                return await context.UserAccounts.AnyAsync();
+            }
+            catch
+            {
                 throw;
             }
         }

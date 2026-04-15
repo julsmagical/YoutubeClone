@@ -1,3 +1,4 @@
+using Scalar.AspNetCore;
 using Serilog;
 using YoutubeClone.WebApp.Extensions;
 using YoutubeClone.WebApp.Middlewares;
@@ -12,12 +13,15 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.MapScalarApiReference();
     app.MapOpenApi();
 }
 
 app.UseMiddleware<ErrorHandleMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
