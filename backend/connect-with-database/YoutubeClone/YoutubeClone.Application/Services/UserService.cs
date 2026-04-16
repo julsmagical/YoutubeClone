@@ -72,6 +72,8 @@ namespace YoutubeClone.Application.Services
 
             await uow.userRepository.Update(user);
 
+            await uow.SaveChangesAsync(); //
+
             return ResponseHelper.Create(true);
         }
 
@@ -79,22 +81,7 @@ namespace YoutubeClone.Application.Services
         {
             var queryable = uow.userRepository.Queryable();
 
-            if (!string.IsNullOrWhiteSpace(model.UserName))
-            {
-                queryable = queryable.Where(x => x.UserName.Contains(model.UserName ?? ""));
-            }
-            if (!string.IsNullOrWhiteSpace(model.DisplayName))
-            {
-                queryable = queryable.Where(x => x.DisplayName.Contains(model.DisplayName ?? ""));
-            }
-            if (!string.IsNullOrWhiteSpace(model.Email))
-            {
-                queryable = queryable.Where(x => x.Email.Contains(model.Email ?? ""));
-            }
-            if (!string.IsNullOrWhiteSpace(model.Location))
-            {
-                queryable = queryable.Where(x => x.Location.Contains(model.Location ?? ""));
-            }
+
 
             // paginacion y consultas
             var users = queryable.Skip(model.Offset).Take(model.Limit).ToList();
@@ -178,11 +165,6 @@ namespace YoutubeClone.Application.Services
             });
 
             await uow.SaveChangesAsync();
-        }
-
-        Task<GenericResponse<List<UserDTO>>> IUserService.GetAll(FilterUserRequest model)
-        {
-            throw new NotImplementedException();
         }
     }
 }

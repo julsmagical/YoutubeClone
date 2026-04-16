@@ -25,7 +25,7 @@ namespace YoutubeClone.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] FilterUserRequest model)
         {
-            var rsp = await userService.GetAll(model);
+            var rsp = userService.GetAll(model);
             return Ok(rsp);
         }
 

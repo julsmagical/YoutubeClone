@@ -8,5 +8,6 @@ namespace YoutubeClone.Application.Models.Responses
         public List<string> Errors { get; set; } = [];
         public DateTime TimeStamp { get; } = DateTimeHelper.UtcNow();
         public T Data { get; set; }
+        //public int Count = 0;
     }
 }
