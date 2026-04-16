@@ -5,16 +5,16 @@ using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Models.DTOS;
 using YoutubeClone.Application.Models.Requests.User;
 using YoutubeClone.Application.Models.Responses;
+using YoutubeClone.Domain.Database.SqlServer;
 using YoutubeClone.Domain.Database.SqlServer.Entities;
 using YoutubeClone.Domain.Exceptions;
-using YoutubeClone.Domain.Interfaces.Repositories;
 using YoutubeClone.Shared;
 using YoutubeClone.Shared.Constants;
 using YoutubeClone.Shared.Helpers;
 
 namespace YoutubeClone.Application.Services
 {
-    public class UserService(IUserRepository repository, IConfiguration configuration) : IUserService
+    public class UserService(IUnitOfWork uow, IConfiguration configuration) : IUserService
     {
         public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
         {
@@ -46,7 +46,7 @@ namespace YoutubeClone.Application.Services
 
             //throw new Exception("La base de datos no se pudo conectar con el servicio");
 
-            var create = await repository.Create(new UserAccount
+            var create = await uow.userRepository.Create(new UserAccount
             {
                 UserId = Guid.NewGuid(),
                 UserName = model.UserName.ToLower(),
@@ -59,6 +59,8 @@ namespace YoutubeClone.Application.Services
                 DeletedAt = null,
             });
 
+            await uow.SaveChangesAsync();
+
             return ResponseHelper.Create(Map(create), [], "Usuario creado correctamente.");
         }
 
@@ -68,14 +70,14 @@ namespace YoutubeClone.Application.Services
 
             user.DeletedAt = DateTimeHelper.UtcNow();
 
-            await repository.Update(user);
+            await uow.userRepository.Update(user);
 
             return ResponseHelper.Create(true);
         }
 
         public GenericResponse<List<UserDTO>> GetAll(FilterUserRequest model)
         {
-            var queryable = repository.Queryable();
+            var queryable = uow.userRepository.Queryable();
 
             if (!string.IsNullOrWhiteSpace(model.UserName))
             {
@@ -117,16 +119,21 @@ namespace YoutubeClone.Application.Services
 
             user.UserName = model.UserName ?? user.UserName;
             user.DisplayName = model.DisplayName ?? user.DisplayName;
+            user.Email = model.Email ?? user.Email;
+            user.Location = model.Location ?? user.Location;
             //actualizar updatedAt cuando el campo este disponible en la entidad
+            user.UpdatedAt = DateTimeHelper.UtcNow();
 
-            await repository.Update(user);
+            var update = await uow.userRepository.Update(user);
+
+            await uow.SaveChangesAsync();
 
             return ResponseHelper.Create(Map(user));
         }
 
         private async Task<UserAccount> GetUser(Guid id)
         {
-            return await repository.GetById(id)
+            return await uow.userRepository.GetById(id)
                 ?? throw new NotFoundException(ResponseConstants.USER_NOT_EXIST);
         }
 
@@ -147,7 +154,7 @@ namespace YoutubeClone.Application.Services
 
         public async Task CreateFirstUser()
         {
-            var hasCreated = await repository.HasCreated();
+            var hasCreated = await uow.userRepository.HasCreated();
             if (hasCreated) return;
 
             var userName = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_USERNAME]
@@ -162,13 +169,15 @@ namespace YoutubeClone.Application.Services
             var password = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD]
                 ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD));
 
-            await repository.Create(new UserAccount
+            await uow.userRepository.Create(new UserAccount
             {
                 UserName = userName,
                 DisplayName = displayName,
                 Email = email,
                 Password = Hasher.HashPassword(password)
             });
+
+            await uow.SaveChangesAsync();
         }
 
         Task<GenericResponse<List<UserDTO>>> IUserService.GetAll(FilterUserRequest model)

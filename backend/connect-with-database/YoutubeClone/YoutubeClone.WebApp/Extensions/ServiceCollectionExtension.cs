@@ -5,9 +5,11 @@ using Serilog;
 using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Services;
+using YoutubeClone.Domain.Database.SqlServer;
 using YoutubeClone.Domain.Database.SqlServer.Context;
 using YoutubeClone.Domain.Exceptions;
 using YoutubeClone.Domain.Interfaces.Repositories;
+using YoutubeClone.Infraestructure;
 using YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories;
 using YoutubeClone.Shared.Constants;
 using YoutubeClone.WebApp.Middlewares;
@@ -32,6 +34,8 @@ namespace YoutubeClone.WebApp.Extensions
         /// <param name="services"></param>
         public static void AddRepositories(this IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddTransient<IUserRepository, UserRepository>();
         }
 
@@ -62,6 +66,7 @@ namespace YoutubeClone.WebApp.Extensions
         /// <param name="services"></param>
         public async static Task AddCore(this IServiceCollection services, IConfiguration configuration)
         {
+
             services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (errorContext) =>
@@ -81,18 +86,19 @@ namespace YoutubeClone.WebApp.Extensions
 
             services.AddSqlServer<YoutubeCloneContext>(databaseConnectionString);
 
-            services.AddRepositories();
+            services.AddRepositories(); //database
 
             services.AddServices();
 
             services.AddMiddlewares();
 
-            services.AddLogging();
+            services.AddLogging(); //serilog
 
             services.AddAuth(configuration);
 
             services.AddCache();
 
+            //primer usuario
             await Initialize(services);
         }
 

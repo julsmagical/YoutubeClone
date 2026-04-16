@@ -1,0 +1,12 @@
+2026-04-16 00:01:20.791 -05:00 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-16 00:01:20.830 -05:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserAccount] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-04-16 00:01:20.855 -05:00 [INF] Now listening on: http://localhost:5063
+2026-04-16 00:01:20.876 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-16 00:01:20.877 -05:00 [INF] Hosting environment: Development
+2026-04-16 00:01:20.878 -05:00 [INF] Content root path: C:\Users\ASUS\Documents\NewWorkspace\YoutubeClone\backend\connect-with-database\YoutubeClone\YoutubeClone.WebApp

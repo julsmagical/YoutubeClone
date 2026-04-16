@@ -15,11 +15,13 @@ public partial class UserAccount
 
     public DateTime Birthday { get; set; }
 
-    public string Location { get; set; } = null!;
+    public string? Location { get; set; }
 
     public string Password { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
 

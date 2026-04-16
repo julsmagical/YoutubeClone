@@ -13,8 +13,6 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
             {
                 //insert
                 await context.UserAccounts.AddAsync(userAccount);
-                //execution - commit
-                await context.SaveChangesAsync();
                 return userAccount;
             }
             catch (Exception)
@@ -23,11 +21,11 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
             }
         }
 
-        public async Task<UserAccount?> GetById(Guid collaboratorId)
+        public async Task<UserAccount?> GetById(Guid userId)
         {
             try
             {
-                return await context.UserAccounts.FirstOrDefaultAsync(x => x.UserId == collaboratorId && x.DeletedAt == null);
+                return await context.UserAccounts.FirstOrDefaultAsync(x => x.UserId == userId && x.DeletedAt == null);
             }
             catch (Exception)
             {
@@ -64,7 +62,6 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
             try
             {
                 context.UserAccounts.Update(userAccount);
-                await context.SaveChangesAsync();
                 return userAccount;
             }
             catch (Exception)

@@ -48,11 +48,11 @@ public partial class YoutubeCloneContext : DbContext
     {
         modelBuilder.Entity<Channel>(entity =>
         {
-            entity.HasKey(e => e.ChannelId).HasName("PK__Channel__38C3E8F470ABE99B");
+            entity.HasKey(e => e.ChannelId).HasName("PK__Channel__38C3E8F4164332E7");
 
             entity.ToTable("Channel");
 
-            entity.HasIndex(e => e.Handle, "UQ__Channel__FE5BB31AEA119270").IsUnique();
+            entity.HasIndex(e => e.Handle, "UQ__Channel__FE5BB31AC0C7B923").IsUnique();
 
             entity.Property(e => e.ChannelId)
                 .HasDefaultValueSql("(newid())")
@@ -77,7 +77,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA13AA6273");
+            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA52A09D05");
 
             entity.ToTable("Comment");
 
@@ -107,7 +107,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<CreatorType>(entity =>
         {
-            entity.HasKey(e => e.CreatorTypeId).HasName("PK__CreatorT__2D56E80AD218E403");
+            entity.HasKey(e => e.CreatorTypeId).HasName("PK__CreatorT__2D56E80A8F1E9560");
 
             entity.ToTable("CreatorType");
 
@@ -117,7 +117,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<Playlist>(entity =>
         {
-            entity.HasKey(e => e.PlaylistId).HasName("PK__Playlist__B30167806F18D8A4");
+            entity.HasKey(e => e.PlaylistId).HasName("PK__Playlist__B3016780B6767CB7");
 
             entity.ToTable("Playlist");
 
@@ -165,7 +165,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<ReactionType>(entity =>
         {
-            entity.HasKey(e => e.ReactionTypeId).HasName("PK__Reaction__01E625C01D2B20F4");
+            entity.HasKey(e => e.ReactionTypeId).HasName("PK__Reaction__01E625C08A150629");
 
             entity.ToTable("ReactionType");
 
@@ -176,7 +176,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<Subscription>(entity =>
         {
-            entity.HasKey(e => e.SubscriptionId).HasName("PK__Subscrip__9A2B24BD4A43EC2A");
+            entity.HasKey(e => e.SubscriptionId).HasName("PK__Subscrip__9A2B24BDD07CB7C3");
 
             entity.ToTable("Subscription");
 
@@ -205,7 +205,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CFA4C08357FE0");
+            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CFA4C83E39E22");
 
             entity.ToTable("Tag");
 
@@ -217,13 +217,13 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserAcco__1788CCACCDB298D5");
+            entity.HasKey(e => e.UserId).HasName("PK__UserAcco__1788CCACCA12F9CA");
 
             entity.ToTable("UserAccount");
 
-            entity.HasIndex(e => e.Email, "UQ__UserAcco__A9D10534344C4AD2").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__UserAcco__A9D10534BB72485F").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__UserAcco__C9F28456F954C8D2").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__UserAcco__C9F28456273FEFE6").IsUnique();
 
             entity.Property(e => e.UserId)
                 .HasDefaultValueSql("(newid())")
@@ -232,13 +232,13 @@ public partial class YoutubeCloneContext : DbContext
             entity.Property(e => e.DisplayName).HasMaxLength(50);
             entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.Location).HasMaxLength(30);
-            entity.Property(e => e.Password).HasMaxLength(40);
+            entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.UserName).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Video>(entity =>
         {
-            entity.HasKey(e => e.VideoId).HasName("PK__Video__BAE5124AF6DE34A1");
+            entity.HasKey(e => e.VideoId).HasName("PK__Video__BAE5124AD09C4AC7");
 
             entity.ToTable("Video");
 
@@ -287,7 +287,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<VideoAccessibility>(entity =>
         {
-            entity.HasKey(e => e.VideoAccessibilityId).HasName("PK__VideoAcc__259709532C386F7D");
+            entity.HasKey(e => e.VideoAccessibilityId).HasName("PK__VideoAcc__2597095325956EE2");
 
             entity.ToTable("VideoAccessibility");
 
@@ -298,7 +298,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<VideoReaction>(entity =>
         {
-            entity.HasKey(e => e.VideoReactionId).HasName("PK__VideoRea__BB33D469F96B0399");
+            entity.HasKey(e => e.VideoReactionId).HasName("PK__VideoRea__BB33D469AC02776D");
 
             entity.ToTable("VideoReaction");
 
@@ -328,7 +328,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<ViewHistory>(entity =>
         {
-            entity.HasKey(e => e.ViewHistoryId).HasName("PK__ViewHist__55D4BB13EA6CD11B");
+            entity.HasKey(e => e.ViewHistoryId).HasName("PK__ViewHist__55D4BB139D7B2F3F");
 
             entity.ToTable("ViewHistory");
 

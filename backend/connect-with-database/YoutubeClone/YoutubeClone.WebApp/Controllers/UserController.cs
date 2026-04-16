@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YoutubeClone.Application.Interfaces.Services;
 using YoutubeClone.Application.Models.Requests.User;
 
@@ -7,7 +6,6 @@ namespace YoutubeClone.WebApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpPost]
