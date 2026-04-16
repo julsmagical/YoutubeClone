@@ -23,7 +23,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"userName\": \"usuario1\",\r\n  \"displayName\": \"Juan1\",\r\n  \"email\": \"juan@email.com\",\r\n  \"birthday\": \"1995-05-10\",\r\n  \"country\": \"Ecuador\",\r\n  \"password\": \"12345678\"\r\n}",
+              "raw": "{\r\n  \"userName\": \"usuario1\",\r\n  \"displayName\": \"Juan1\",\r\n  \"email\": \"juan1@email.com\",\r\n  \"birthday\": \"2006-05-10\",\r\n  \"location\": \"Ecuador\",\r\n  \"password\": \"12345678\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -31,14 +31,11 @@
               }
             },
             "url": {
-              "raw": "https://localhost:7238/api/user",
-              "protocol": "https",
+              "raw": "{{BaseUrl}}/user",
               "host": [
-                "localhost"
+                "{{BaseUrl}}"
               ],
-              "port": "7238",
               "path": [
-                "api",
                 "user"
               ]
             }
@@ -51,25 +48,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://localhost:7238/api/user?limit=10&offset=0",
-              "protocol": "https",
+              "raw": "{{BaseUrl}}/user",
               "host": [
-                "localhost"
+                "{{BaseUrl}}"
               ],
-              "port": "7238",
               "path": [
-                "api",
                 "user"
               ],
               "query": [
-                {
-                  "key": "limit",
-                  "value": "10"
-                },
-                {
-                  "key": "offset",
-                  "value": "0"
-                },
                 {
                   "key": "userName",
                   "value": "juan",
@@ -99,16 +85,64 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "https://localhost:7238/api/user/12ac6aee-18df-4cea-97fc-33c26f03e586",
-              "protocol": "https",
+              "raw": "{{BaseUrl}}/user/d30b7c79-d6c2-4699-a9eb-841f210d67f6",
               "host": [
-                "localhost"
+                "{{BaseUrl}}"
               ],
-              "port": "7238",
               "path": [
-                "api",
                 "user",
-                "12ac6aee-18df-4cea-97fc-33c26f03e586"
+                "d30b7c79-d6c2-4699-a9eb-841f210d67f6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"displayName\": \"Juliet\",\r\n  \"email\": \"juliet@example.com\",\r\n  \"location\": \"Argentina\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/user/d30b7c79-d6c2-4699-a9eb-841f210d67f6",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "d30b7c79-d6c2-4699-a9eb-841f210d67f6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/user/d30b7c79-d6c2-4699-a9eb-841f210d67f6",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "user",
+                "d30b7c79-d6c2-4699-a9eb-841f210d67f6"
               ]
             }
           },
@@ -117,40 +151,82 @@
       ]
     },
     {
-      "name": "Update User",
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"displayName\": \"Juan Actualizado\",\r\n  \"email\": \"juan.nuevo@example.com\",\r\n  \"country\": \"Peru\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const resJson = pm.response.json();\r",
+                  "pm.environment.set(\"token\", resJson.data.token);\r",
+                  "pm.environment.set(\"refreshToken\", resJson.data.refreshToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
             }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:5297/api/users/11111111-1111-1111-1111-111111111111",
-          "protocol": "http",
-          "host": [
-            "localhost"
           ],
-          "port": "5297",
-          "path": [
-            "api",
-            "users",
-            "11111111-1111-1111-1111-111111111111"
-          ]
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"Email\": \"changeme@userroot.com\",\r\n    \"Password\": \"changeme\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/auth/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Renew",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const resJson = pm.response.json();\r",
+                  "pm.enviroment.set(\"token\", resJson.data);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"RefreshToken\": \"{{RefreshTokeen}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     }
   ]
 }
