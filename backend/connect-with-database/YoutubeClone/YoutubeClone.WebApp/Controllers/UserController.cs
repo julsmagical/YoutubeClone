@@ -16,13 +16,13 @@ namespace YoutubeClone.WebApp.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpPost]
-        [Authorize(Roles = "Sistema")]
+        //[Authorize(Roles = "Sistema")]
         [EndpointSummary("Crear un usuario")]
         [EndpointDescription("Realiza la creación de un usuario")]
         [ProducesResponseType<GenericResponse<UserDTO>>(StatusCodes.Status201Created)]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest model)
         {
-            var rsp = await userService.Create(model);
+            var rsp = await userService.Create(model, UserClaim());
             return Ok(rsp);
         }
 
@@ -38,7 +38,7 @@ namespace YoutubeClone.WebApp.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [EndpointSummary("Obtiene uno o más usuarios")]
         [EndpointDescription("Realiza la petición para obtener uno o más usuarios")]
         [ProducesResponseType<GenericResponse<List<UserDTO>>>(StatusCodes.Status200OK)]

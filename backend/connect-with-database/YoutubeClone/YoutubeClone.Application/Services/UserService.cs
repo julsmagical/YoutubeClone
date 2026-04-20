@@ -232,11 +232,6 @@ namespace YoutubeClone.Application.Services
             await uow.SaveChangesAsync();
         }
 
-        public Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<UserAccount> GetExecutor(string value)
         {
             var uuid = Guid.Parse(value);
