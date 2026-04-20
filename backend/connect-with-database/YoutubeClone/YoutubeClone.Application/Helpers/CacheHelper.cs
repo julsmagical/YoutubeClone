@@ -35,5 +35,14 @@ namespace YoutubeClone.Application.Helpers
                 Expiration = TimeSpan.FromDays(Convert.ToInt32(configuration[ConfigurationConstants.AUTH_REFRESH_TOKEN_EXPIRATION_IN_DAYS] ?? "15"))
             };
         }
+
+        public static CacheKey AuthRegisterTokenCreation(string value, TimeSpan expiration)
+        {
+            return new CacheKey
+            {
+                Key = AuthTokenKey(value),
+                Expiration = expiration
+            };
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace YoutubeClone.Domain.Database.SqlServer
     {
         IUserRepository userRepository { get; set; }
         IRoleRepository roleRepository { get; set; }
+        IEmailTemplateRepository emailTemplateRepository { get; set; }
         Task SaveChangesAsync();
     }
 }

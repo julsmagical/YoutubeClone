@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
+using YoutubeClone.Application.Models.DTOS;
 using YoutubeClone.Application.Models.Helpers;
 using YoutubeClone.Application.Models.Requests.Auth;
+using YoutubeClone.Application.Models.Requests.Auth.Register;
+using YoutubeClone.Application.Models.Requests.User;
 using YoutubeClone.Application.Models.Responses;
 using YoutubeClone.Application.Models.Responses.Auth;
 using YoutubeClone.Domain.Database.SqlServer;
@@ -55,5 +58,30 @@ namespace YoutubeClone.Application.Services
                 RefreshToken = refreshToken
             });
         }
+
+        public Task<GenericResponse<UserDTO>> RegisterComplete(CreateUserRequest model, string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        //Temporal
+        public Task<GenericResponse<string>> RegisterInit(RegisterInitAuthRequest model)
+        {
+            throw new NotImplementedException();
+        }
+
+        /*public Task<GenericResponse<string>> RegisterInit(RegisterInitAuthRequest model)
+        {
+            var token = Generate.RandomText();
+            var cacheKey = CacheHelper.AuthRegisterTokenCreation(token, TimeSpan.FromMinutes(5));
+            cacheService.Create(cacheKey.Key, cacheKey.Expiration, model);
+        }*/
+
+        public Task<GenericResponse<string>> RegisterValidateToken(string token)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

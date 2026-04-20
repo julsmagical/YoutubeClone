@@ -16,7 +16,7 @@ using YoutubeClone.Shared.Helpers;
 
 namespace YoutubeClone.Application.Services
 {
-    public class UserService(IUnitOfWork uow, IConfiguration configuration) : IUserService
+    public class UserService(IUnitOfWork uow, IConfiguration configuration, SMTP smtp, IEmailTemplateService emailTemplateService) : IUserService
     {
         public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model, Claim claim)
         {
@@ -69,7 +69,7 @@ namespace YoutubeClone.Application.Services
                 Email = model.Email.ToLower(),
                 Birthday = model.Birthday,
                 Location = model.Location,
-                Password = model.Password,
+                Password = Hasher.HashPassword(password), //cambio a hash
                 CreatedAt = DateTimeHelper.UtcNow(),
                 DeletedAt = null,
                 UserAccountRoles = [
@@ -79,6 +79,12 @@ namespace YoutubeClone.Application.Services
                     }
                 ]
             });
+
+            var template = await emailTemplateService.Get(EmailTemplateNameConstants.USER_REGISTER, new Dictionary<string, string>
+            {
+                { "password", password }
+            });
+            await smtp.Send(model.Email, template.Subject, template.Body);
 
             await uow.SaveChangesAsync();
 
