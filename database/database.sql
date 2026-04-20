@@ -202,13 +202,13 @@ GO
 -- ============================================================
 
 CREATE TABLE EmailTemplates (
-    EmailTemplateId INT           IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    Name            VARCHAR(100)  NOT NULL UNIQUE, -- MEJORA: UNIQUE porque el código lo buscará por Name como clave
-    Subject         VARCHAR(255)  NOT NULL,
-    Body            NVARCHAR(MAX) NOT NULL,         -- MEJORA: NVARCHAR(MAX) en lugar de TEXT (TEXT está deprecado en SQL Server) y NVARCHAR para soporte unicode
-    IsActive        BIT           NOT NULL DEFAULT 1, -- AGREGADO: para poder desactivar una plantilla sin eliminarla
-    CreatedAt       DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
-    UpdatedAt       DATETIME2     NULL,              -- AGREGADO: saber cuándo fue modificada por última vez
+    EmailTemplateId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL UNIQUE,
+    Subject VARCHAR(255) NOT NULL,
+    Body NVARCHAR(2000) NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1, -- poder desactivar sin eliminar
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt DATETIME2 NULL,
 );
 GO
 
@@ -226,3 +226,18 @@ INSERT INTO EmailTemplates (Name, Subject, Body) VALUES
  'Se intentó iniciar sesión en tu cuenta. Si no fuiste tú, contacta al administrador.');
 GO
 
+-- ============================================================
+--  Roles del sistema YouTube
+-- ============================================================
+
+DECLARE @RoleSystem    UNIQUEIDENTIFIER = NEWID();
+DECLARE @RoleAdmin     UNIQUEIDENTIFIER = NEWID();
+DECLARE @RoleCreator   UNIQUEIDENTIFIER = NEWID();
+DECLARE @RoleUser      UNIQUEIDENTIFIER = NEWID();
+
+INSERT INTO Roles (RoleID, Name, Description) VALUES
+(@RoleSystem,  'Sistema',               'Rol interno. Ejecuta procesos automatizados como envío de correos y asignación inicial de roles. No asignable manualmente.'),
+(@RoleAdmin,   'Administrador',         'Modera contenido de la plataforma. Puede eliminar videos, suspender canales, verificar creadores y gestionar comentarios.'),
+(@RoleCreator, 'Creador de Contenido',  'Puede subir y gestionar sus propios videos, administrar su canal y crear playlists.'),
+(@RoleUser,    'Usuario',               'Puede ver videos, reaccionar, comentar, suscribirse a canales y gestionar su historial y playlists personales.');
+GO
