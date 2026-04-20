@@ -18,6 +18,7 @@ using YoutubeClone.WebApp.Middlewares;
 
 namespace YoutubeClone.WebApp.Extensions
 {
+
     public static class ServiceCollectionExtension
     {
         /// <summary>

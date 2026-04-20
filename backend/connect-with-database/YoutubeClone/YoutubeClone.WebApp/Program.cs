@@ -6,7 +6,7 @@ using YoutubeClone.WebApp.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
-builder.Services.AddCore(builder.Configuration);
+await builder.Services.AddCore(builder.Configuration);
 
 var app = builder.Build();
 
