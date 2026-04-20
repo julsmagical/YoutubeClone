@@ -5,27 +5,22 @@ using YoutubeClone.Domain.Interfaces.Repositories;
 
 namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
 {
-    public class UserRepository(YoutubeCloneContext context) : IUserRepository
+    public class UserRepository(YoutubeCloneContext context) : GenericRepository<UserAccount>(context), IUserRepository
     {
-        public async Task<UserAccount> Create(UserAccount userAccount)
+        public async Task<bool> ClearRoles(List<UserAccountRole> roles)
         {
-            try
-            {
-                //insert
-                await context.UserAccounts.AddAsync(userAccount);
-                return userAccount;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            context.UserAccountRoles.RemoveRange(roles);
+            return true;
         }
 
         public async Task<UserAccount?> GetById(Guid userId)
         {
             try
             {
-                return await context.UserAccounts.FirstOrDefaultAsync(x => x.UserId == userId && x.DeletedAt == null);
+                return await context.UserAccounts
+                    .Include(user => user.UserAccountRoles)
+                    .ThenInclude(userRoles => userRoles.Role)
+                    .FirstOrDefaultAsync(x => x.UserId == userId && x.DeletedAt == null);
             }
             catch (Exception)
             {
@@ -37,12 +32,26 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
         {
             try
             {
-                return await context.UserAccounts.FirstOrDefaultAsync(x => x.Email == email && x.DeletedAt == null);
+                return await context.UserAccounts
+                    .Include(user => user.UserAccountRoles)
+                    .ThenInclude(userRoles => userRoles.Role)
+                    .FirstOrDefaultAsync(x => x.Email == email && x.DeletedAt == null);
             }
             catch (Exception)
             {
+
                 throw;
             }
+        }
+
+        public async Task<Role?> GetRole(string name)
+        {
+            return await context.Roles.FirstOrDefaultAsync(x => x.Name == name);
+        }
+
+        public async Task<Role?> GetRole(Guid id)
+        {
+            return await context.Roles.FirstOrDefaultAsync(x => x.RoleId == id);
         }
 
         public async Task<bool> HasCreated()
@@ -57,54 +66,5 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
             }
         }
 
-        public async Task<UserAccount> Update(UserAccount userAccount)
-        {
-            try
-            {
-                context.UserAccounts.Update(userAccount);
-                return userAccount;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public async Task<bool> IfExist(Guid userId)
-        {
-            try
-            {
-                return await context.UserAccounts.AnyAsync(x => x.UserId == userId);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public Task<bool> IfExists(string userName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<UserAccount> Queryable()
-        {
-            try
-            {
-                return context.UserAccounts.Where(x => x.DeletedAt == null).AsQueryable();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public Task<bool> IfExist(string userName)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

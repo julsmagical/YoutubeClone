@@ -1,4 +1,6 @@
-﻿namespace YoutubeClone.Application.Models.DTOS
+﻿using YoutubeClone.Application.Models.DTOs;
+
+namespace YoutubeClone.Application.Models.DTOS
 {
     public class UserDTO
     {
@@ -11,5 +13,6 @@
         public string Password { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public RoleDTO Role { get; set; } = null!;
     }
 }

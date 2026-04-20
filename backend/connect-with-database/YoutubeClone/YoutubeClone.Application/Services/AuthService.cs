@@ -5,6 +5,7 @@ using YoutubeClone.Application.Models.Helpers;
 using YoutubeClone.Application.Models.Requests.Auth;
 using YoutubeClone.Application.Models.Responses;
 using YoutubeClone.Application.Models.Responses.Auth;
+using YoutubeClone.Domain.Database.SqlServer;
 using YoutubeClone.Domain.Exceptions;
 using YoutubeClone.Domain.Interfaces.Repositories;
 using YoutubeClone.Shared;
@@ -12,11 +13,11 @@ using YoutubeClone.Shared.Constants;
 
 namespace YoutubeClone.Application.Services
 {
-    public class AuthService(IUserRepository userRepository, IConfiguration configuration, ICacheService cacheService) : IAuthService
+    public class AuthService(IUnitOfWork uow, IUserRepository userRepository, IConfiguration configuration, ICacheService cacheService) : IAuthService
     {
         public async Task<GenericResponse<LoginAuthResponse>> Login(LoginAuthRequest model)
         {
-            var userAccount = await userRepository.GetAll(model.Email)
+            var userAccount = await uow.userRepository.GetAll(model.Email)
                 ?? throw new BadRequestException(ResponseConstants.AUTH_USER_OR_PASSWORD_NOT_FOUND);
 
             var validatePassword = Hasher.ComparePassword(model.Password, userAccount.Password);
@@ -25,7 +26,7 @@ namespace YoutubeClone.Application.Services
                 throw new BadRequestException(ResponseConstants.AUTH_USER_OR_PASSWORD_NOT_FOUND);
             }
 
-            var token = TokenHelper.Create(userAccount.UserId, configuration, cacheService);
+            var token = TokenHelper.Create(userAccount.UserId, [.. userAccount.UserAccountRoles.Select(x => x.Role.Name)], configuration, cacheService);
             var refreshToken = TokenHelper.CreateRefresh(userAccount.UserId, configuration, cacheService);
 
             return ResponseHelper.Create(new LoginAuthResponse
@@ -40,7 +41,10 @@ namespace YoutubeClone.Application.Services
             var findRefreshToken = cacheService.Get<RefreshToken>(CacheHelper.AuthRefreshTokenKey(model.RefreshToken))
                 ?? throw new NotFoundException(ResponseConstants.AUTH_REFRESH_TOKEN_NOT_FOUND);
 
-            var token = TokenHelper.Create(findRefreshToken.UserId, configuration, cacheService);
+            var user = await uow.userRepository.GetById(findRefreshToken.UserId)
+                ?? throw new NotFoundException(ResponseConstants.USER_NOT_EXIST);
+
+            var token = TokenHelper.Create(findRefreshToken.UserId, [.. user.UserAccountRoles.Select(x => x.Role.Name)], configuration, cacheService);
             var refreshToken = TokenHelper.CreateRefresh(findRefreshToken.UserId, configuration, cacheService);
 
             cacheService.Delete(CacheHelper.AuthRefreshTokenKey(model.RefreshToken));

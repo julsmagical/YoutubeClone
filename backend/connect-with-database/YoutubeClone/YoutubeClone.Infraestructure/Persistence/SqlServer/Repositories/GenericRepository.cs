@@ -1,9 +1,10 @@
-﻿using YoutubeClone.Domain.Database.SqlServer.Context;
-using YoutubeClone.Domain.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using YoutubeClone.Domain.Database.SqlServer.Context;
 
 namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
 {
-    public class GenericRepository<T>(YoutubeCloneContext context) : IGenericRepository<T> where T : class
+    public class GenericRepository<T>(YoutubeCloneContext context) where T : class
     {
         public async Task<T> Create(T entity)
         {
@@ -26,6 +27,16 @@ namespace YoutubeClone.Infraestructure.Persistence.SqlServer.Repositories
         {
             context.Set<T>().Update(entity);
             return entity;
+        }
+
+        public async Task<bool> IfExists(Expression<Func<T, bool>> expression)
+        {
+            return await context.Set<T>().AnyAsync(expression);
+        }
+
+        public async Task<T?> Get(Expression<Func<T, bool>> expression)
+        {
+            return await context.Set<T>().FirstOrDefaultAsync(expression);
         }
     }
 }

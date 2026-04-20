@@ -1,7 +1,10 @@
-﻿namespace YoutubeClone.Application.Interfaces.Services
+﻿using YoutubeClone.Application.Models.DTOs;
+using YoutubeClone.Application.Models.Responses;
+
+namespace YoutubeClone.Application.Interfaces.Services
 {
     public interface IAppService
     {
-        //Task<GenericResponse<AppInfoDTO> Info();
+        Task<GenericResponse<AppInfoDTO>> Info();
     }
 }

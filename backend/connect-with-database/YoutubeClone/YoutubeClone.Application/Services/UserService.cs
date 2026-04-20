@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using System.Security.Claims;
 using YoutubeClone.Application.Helpers;
 using YoutubeClone.Application.Interfaces.Services;
+using YoutubeClone.Application.Models.DTOs;
 using YoutubeClone.Application.Models.DTOS;
 using YoutubeClone.Application.Models.Requests.User;
 using YoutubeClone.Application.Models.Responses;
@@ -16,7 +18,7 @@ namespace YoutubeClone.Application.Services
 {
     public class UserService(IUnitOfWork uow, IConfiguration configuration) : IUserService
     {
-        public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
+        public async Task<GenericResponse<UserDTO>> Create(CreateUserRequest model, Claim claim)
         {
             // VALIDACIONES
             /*var queryable = repository.Queryable();
@@ -46,6 +48,19 @@ namespace YoutubeClone.Application.Services
 
             //throw new Exception("La base de datos no se pudo conectar con el servicio");
 
+            var executor = await GetExecutor(claim.Value);
+
+            if (model.RoleId == Guid.Empty)
+            {
+                throw new NotFoundException(ValidationConstants.IsEmpty("RoleId"));
+            }
+
+            await ValidateEmailIfExists(model.Email);
+
+            var password = Generate.RandomText(32);
+
+            var roleToAssign = await ValidateRole(executor, model.RoleId);
+
             var create = await uow.userRepository.Create(new UserAccount
             {
                 UserId = Guid.NewGuid(),
@@ -57,6 +72,12 @@ namespace YoutubeClone.Application.Services
                 Password = model.Password,
                 CreatedAt = DateTimeHelper.UtcNow(),
                 DeletedAt = null,
+                UserAccountRoles = [
+                    new UserAccountRole {
+                        RoleId = roleToAssign.RoleId,
+                        AssignedBy = executor.UserId
+                    }
+                ]
             });
 
             await uow.SaveChangesAsync();
@@ -100,14 +121,35 @@ namespace YoutubeClone.Application.Services
             return ResponseHelper.Create(Map(user));
         }
 
-        public async Task<GenericResponse<UserDTO>> Update(Guid id, UpdateUserRequest model)
+        public async Task<GenericResponse<UserDTO>> Update(Guid id, UpdateUserRequest model, Claim claim)
         {
+            var executor = await GetExecutor(claim.Value);
             var user = await GetUser(id);
 
             user.UserName = model.UserName ?? user.UserName;
             user.DisplayName = model.DisplayName ?? user.DisplayName;
             user.Email = model.Email ?? user.Email;
             user.Location = model.Location ?? user.Location;
+
+            if (!string.IsNullOrWhiteSpace(model.Email) && user.Email != model.Email)
+            {
+                await ValidateEmailIfExists(model.Email);
+                user.Email = model.Email;
+            }
+
+            if (model.RoleId.HasValue)
+            {
+                var roleToAssign = await ValidateRole(executor, model.RoleId.Value);
+
+                await uow.userRepository.ClearRoles([.. user.UserAccountRoles]);
+
+                user.UserAccountRoles.Add(new UserAccountRole
+                {
+                    RoleId = roleToAssign.RoleId,
+                    AssignedBy = executor.UserId
+                });
+            }
+
             //actualizar updatedAt cuando el campo este disponible en la entidad
             user.UpdatedAt = DateTimeHelper.UtcNow();
 
@@ -126,6 +168,8 @@ namespace YoutubeClone.Application.Services
 
         private static UserDTO Map(UserAccount user)
         {
+            var role = user.UserAccountRoles.FirstOrDefault()?.Role;
+
             return new UserDTO
             {
                 UserId = user.UserId,
@@ -136,6 +180,12 @@ namespace YoutubeClone.Application.Services
                 Location = user.Location,
                 Password = user.Password,
                 CreatedAt = user.CreatedAt,
+                Role = role != null ? new RoleDTO
+                {
+                    Id = role.RoleId,
+                    Name = role.Name,
+                    Description = role.Description
+                } : null
             };
         }
 
@@ -156,15 +206,65 @@ namespace YoutubeClone.Application.Services
             var password = configuration[ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD]
                 ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.FIRST_APP_TIME_USER_PASSWORD));
 
+            var adminRole = await uow.roleRepository.Get(x => x.Name == RoleConstants.Admin)
+                ?? throw new Exception(ResponseConstants.RoleNotFound(RoleConstants.Admin));
+
             await uow.userRepository.Create(new UserAccount
             {
                 UserName = userName,
                 DisplayName = displayName,
                 Email = email,
-                Password = Hasher.HashPassword(password)
+                Password = Hasher.HashPassword(password),
+                UserAccountRoles = [
+                    new UserAccountRole
+                    {
+                        RoleId = adminRole.RoleId,
+                    }
+                ]
             });
 
             await uow.SaveChangesAsync();
         }
+
+        public Task<GenericResponse<UserDTO>> Create(CreateUserRequest model)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<UserAccount> GetExecutor(string value)
+        {
+            var uuid = Guid.Parse(value);
+            return await uow.userRepository.GetById(uuid)
+                ?? throw new NotFoundException(ResponseConstants.USER_NOT_EXIST);
+        }
+
+        private async Task ValidateEmailIfExists(string email)
+        {
+            if (await uow.userRepository.IfExists(x => x.Email == email))
+            {
+                throw new BadRequestException(ResponseConstants.USER_EMAIL_TAKED);
+            }
+        }
+
+        private async Task<Role> ValidateRole(UserAccount executor, Guid roleId)
+        {
+            var roleToAssign = await uow.roleRepository.Get(roleId)
+                ?? throw new NotFoundException(ResponseConstants.RoleNotFound(roleId));
+
+            if (executor.UserAccountRoles.First().Role.Name == RoleConstants.CreadorContenido && roleToAssign.Name == RoleConstants.Admin)
+            {
+                throw new BadRequestException(ResponseConstants.CANNOT_ASSIGN_THE_ROLE);
+            }
+
+            return roleToAssign;
+        }
+
+        public async Task<GenericResponse<UserDTO>> Me(Claim claim)
+        {
+            var executor = await GetExecutor(claim.Value);
+            return ResponseHelper.Create(Map(executor));
+        }
+
+
     }
 }

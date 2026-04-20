@@ -3,6 +3,6 @@
     public class AppInfoDTO
     {
         public string Version { get; set; } = null!;
-        //public List<ChannelDTO> channelDTO = null!;
+        public List<RoleDTO> Roles { get; set; } = [];
     }
 }

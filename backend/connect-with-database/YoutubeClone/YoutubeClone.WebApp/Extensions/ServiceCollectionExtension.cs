@@ -37,6 +37,8 @@ namespace YoutubeClone.WebApp.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IUserRepository, UserRepository>();
+
+            services.AddScoped<IRoleRepository, RoleRepository>();
         }
 
         /// <summary>

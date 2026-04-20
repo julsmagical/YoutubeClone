@@ -20,5 +20,8 @@
 
         //Auth
         public const string AUTH_REFRESH_TOKEN_EXPIRATION_IN_DAYS = "Auth:RefreshToken:ExpirationInDays";
+
+        // App
+        public const string VERSION = "Version";
     }
 }

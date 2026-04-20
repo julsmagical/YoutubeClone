@@ -9,6 +9,15 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5063"
     },
+    "http:without scalar": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_CONNECTION": ""
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5063"
+    },
     "https": {
       "commandName": "Project",
       "environmentVariables": {

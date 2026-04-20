@@ -4,21 +4,14 @@ using YoutubeClone.Domain.Interfaces.Repositories;
 
 namespace YoutubeClone.Infraestructure
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork(YoutubeCloneContext context, IUserRepository userRepository, IRoleRepository roleRepository) : IUnitOfWork
     {
-        private readonly YoutubeCloneContext context;
-        public IUserRepository userRepository { get; set; }
-
-        //constructor con inyección de dependencias
-        public UnitOfWork(YoutubeCloneContext _context, IUserRepository _userRepository)
-        {
-            userRepository = _userRepository;
-            context = _context;
-        }
-
+        private readonly YoutubeCloneContext _context = context;
+        public IUserRepository userRepository { get; set; } = userRepository;
+        public IRoleRepository roleRepository { get; set; } = roleRepository;
         public async Task SaveChangesAsync()
         {
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

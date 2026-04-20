@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using YoutubeClone.Domain.Database.SqlServer.Entities;
 
 namespace YoutubeClone.Domain.Database.SqlServer.Context;
@@ -22,15 +20,27 @@ public partial class YoutubeCloneContext : DbContext
 
     public virtual DbSet<CreatorType> CreatorTypes { get; set; }
 
+    public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
+
+    public virtual DbSet<Permission> Permissions { get; set; }
+
     public virtual DbSet<Playlist> Playlists { get; set; }
 
+    public virtual DbSet<PlaylistVideo> PlaylistVideos { get; set; }
+
     public virtual DbSet<ReactionType> ReactionTypes { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<RolePermission> RolePermissions { get; set; }
 
     public virtual DbSet<Subscription> Subscriptions { get; set; }
 
     public virtual DbSet<Tag> Tags { get; set; }
 
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
+
+    public virtual DbSet<UserAccountRole> UserAccountRoles { get; set; }
 
     public virtual DbSet<Video> Videos { get; set; }
 
@@ -40,19 +50,15 @@ public partial class YoutubeCloneContext : DbContext
 
     public virtual DbSet<ViewHistory> ViewHistories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost,1433;User=sa;Password=Admin1234@;Database=YoutubeClone;TrustServerCertificate=True");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Channel>(entity =>
         {
-            entity.HasKey(e => e.ChannelId).HasName("PK__Channel__38C3E8F462FA1636");
+            entity.HasKey(e => e.ChannelId).HasName("PK__Channel__38C3E8F44C25B101");
 
             entity.ToTable("Channel");
 
-            entity.HasIndex(e => e.Handle, "UQ__Channel__FE5BB31A01FB13D1").IsUnique();
+            entity.HasIndex(e => e.Handle, "UQ__Channel__FE5BB31AE6B1E009").IsUnique();
 
             entity.Property(e => e.ChannelId)
                 .HasDefaultValueSql("(newid())")
@@ -77,14 +83,14 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA6D0C8994");
+            entity.HasKey(e => e.CommentId).HasName("PK__Comment__C3B4DFAA13EA9D5E");
 
             entity.ToTable("Comment");
 
             entity.Property(e => e.CommentId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("CommentID");
-            entity.Property(e => e.Content).HasMaxLength(255);
+            entity.Property(e => e.Content).HasMaxLength(1000);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.ParentCommentId).HasColumnName("ParentCommentID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -92,32 +98,67 @@ public partial class YoutubeCloneContext : DbContext
 
             entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
                 .HasForeignKey(d => d.ParentCommentId)
-                .HasConstraintName("FK__Comment__ParentC__6C190EBB");
+                .HasConstraintName("FK__Comment__ParentC__07C12930");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__UserID__6A30C649");
+                .HasConstraintName("FK__Comment__UserID__05D8E0BE");
 
             entity.HasOne(d => d.Video).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.VideoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__VideoID__693CA210");
+                .HasConstraintName("FK__Comment__VideoID__04E4BC85");
         });
 
         modelBuilder.Entity<CreatorType>(entity =>
         {
-            entity.HasKey(e => e.CreatorTypeId).HasName("PK__CreatorT__2D56E80A4DE15576");
+            entity.HasKey(e => e.CreatorTypeId).HasName("PK__CreatorT__2D56E80AA6413773");
 
             entity.ToTable("CreatorType");
+
+            entity.HasIndex(e => e.DisplayName, "UQ__CreatorT__4E3E687D877A305C").IsUnique();
 
             entity.Property(e => e.CreatorTypeId).HasColumnName("CreatorTypeID");
             entity.Property(e => e.DisplayName).HasMaxLength(30);
         });
 
+        modelBuilder.Entity<EmailTemplate>(entity =>
+        {
+            entity.HasKey(e => e.EmailTemplateId).HasName("PK__EmailTem__BC0A38756687E39F");
+
+            entity.HasIndex(e => e.Name, "UQ__EmailTem__737584F61CA734B2").IsUnique();
+
+            entity.Property(e => e.Body).HasMaxLength(2000);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Subject)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Permission>(entity =>
+        {
+            entity.HasKey(e => e.PermissionId).HasName("PK__Permissi__EFA6FB0FCCC556D7");
+
+            entity.ToTable("Permission");
+
+            entity.HasIndex(e => e.Code, "UQ__Permissi__A25C5AA79CD1EDA8").IsUnique();
+
+            entity.Property(e => e.PermissionId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("PermissionID");
+            entity.Property(e => e.Action).HasMaxLength(50);
+            entity.Property(e => e.Code).HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.Module).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(150);
+        });
+
         modelBuilder.Entity<Playlist>(entity =>
         {
-            entity.HasKey(e => e.PlaylistId).HasName("PK__Playlist__B30167804AD3C5E7");
+            entity.HasKey(e => e.PlaylistId).HasName("PK__Playlist__B30167807452B4B0");
 
             entity.ToTable("Playlist");
 
@@ -127,58 +168,107 @@ public partial class YoutubeCloneContext : DbContext
             entity.Property(e => e.ChannelId).HasColumnName("ChannelID");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.CreatorTypeId).HasColumnName("CreatorTypeID");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.IsPublic).HasDefaultValue(true);
+            entity.Property(e => e.Title).HasMaxLength(150);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Channel).WithMany(p => p.Playlists)
                 .HasForeignKey(d => d.ChannelId)
-                .HasConstraintName("FK__Playlist__Channe__74AE54BC");
+                .HasConstraintName("FK__Playlist__Channe__114A936A");
 
             entity.HasOne(d => d.CreatorType).WithMany(p => p.Playlists)
                 .HasForeignKey(d => d.CreatorTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Playlist__Creato__72C60C4A");
+                .HasConstraintName("FK__Playlist__Creato__0F624AF8");
 
             entity.HasOne(d => d.User).WithMany(p => p.Playlists)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Playlist__UserID__73BA3083");
+                .HasConstraintName("FK__Playlist__UserID__10566F31");
+        });
 
-            entity.HasMany(d => d.Videos).WithMany(p => p.Playlists)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PlaylistVideo",
-                    r => r.HasOne<Video>().WithMany()
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__PlaylistV__Video__7D439ABD"),
-                    l => l.HasOne<Playlist>().WithMany()
-                        .HasForeignKey("PlaylistId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__PlaylistV__Playl__7C4F7684"),
-                    j =>
-                    {
-                        j.HasKey("PlaylistId", "VideoId").HasName("PK_PlaylistVideos_PlaylistID_VideoID");
-                        j.ToTable("PlaylistVideos");
-                        j.IndexerProperty<Guid>("PlaylistId").HasColumnName("PlaylistID");
-                        j.IndexerProperty<Guid>("VideoId").HasColumnName("VideoID");
-                    });
+        modelBuilder.Entity<PlaylistVideo>(entity =>
+        {
+            entity.HasKey(e => new { e.PlaylistId, e.VideoId }).HasName("PK_PlaylistVideos_PlaylistID_VideoID");
+
+            entity.Property(e => e.PlaylistId).HasColumnName("PlaylistID");
+            entity.Property(e => e.VideoId).HasColumnName("VideoID");
+            entity.Property(e => e.AddedAt).HasDefaultValueSql("(sysutcdatetime())");
+
+            entity.HasOne(d => d.Playlist).WithMany(p => p.PlaylistVideos)
+                .HasForeignKey(d => d.PlaylistId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PlaylistV__Playl__19DFD96B");
+
+            entity.HasOne(d => d.Video).WithMany(p => p.PlaylistVideos)
+                .HasForeignKey(d => d.VideoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PlaylistV__Video__1AD3FDA4");
         });
 
         modelBuilder.Entity<ReactionType>(entity =>
         {
-            entity.HasKey(e => e.ReactionTypeId).HasName("PK__Reaction__01E625C0D4D06206");
+            entity.HasKey(e => e.ReactionTypeId).HasName("PK__Reaction__01E625C0AC9F2967");
 
             entity.ToTable("ReactionType");
+
+            entity.HasIndex(e => e.DisplayName, "UQ__Reaction__4E3E687DEA4FFF80").IsUnique();
 
             entity.Property(e => e.ReactionTypeId).HasColumnName("ReactionTypeID");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())");
             entity.Property(e => e.DisplayName).HasMaxLength(20);
         });
 
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE3A40E5469E");
+
+            entity.HasIndex(e => e.Name, "UQ__Roles__737584F65DEF0224").IsUnique();
+
+            entity.Property(e => e.RoleId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("RoleID");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(sysutcdatetime())");
+        });
+
+        modelBuilder.Entity<RolePermission>(entity =>
+        {
+            entity.HasKey(e => e.RolePermissionId).HasName("PK__RolePerm__120F469A1280E754");
+
+            entity.ToTable("RolePermission");
+
+            entity.HasIndex(e => new { e.RoleId, e.PermissionId }, "UQ_RolePermission").IsUnique();
+
+            entity.Property(e => e.RolePermissionId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("RolePermissionID");
+            entity.Property(e => e.AssignedAt).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.PermissionId).HasColumnName("PermissionID");
+            entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+            entity.HasOne(d => d.Permission).WithMany(p => p.RolePermissions)
+                .HasForeignKey(d => d.PermissionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RolePermi__Permi__5BE2A6F2");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.RolePermissions)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RolePermi__RoleI__5AEE82B9");
+        });
+
         modelBuilder.Entity<Subscription>(entity =>
         {
-            entity.HasKey(e => e.SubscriptionId).HasName("PK__Subscrip__9A2B24BDA9208310");
+            entity.HasKey(e => e.SubscriptionId).HasName("PK__Subscrip__9A2B24BD170BD948");
 
             entity.ToTable("Subscription");
+
+            entity.HasIndex(e => new { e.UserId, e.ChannelId }, "UQ_Subscription").IsUnique();
 
             entity.Property(e => e.SubscriptionId)
                 .HasDefaultValueSql("(newid())")
@@ -191,39 +281,41 @@ public partial class YoutubeCloneContext : DbContext
             entity.HasOne(d => d.Channel).WithMany(p => p.Subscriptions)
                 .HasForeignKey(d => d.ChannelId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Subscript__Chann__5070F446");
+                .HasConstraintName("FK__Subscript__Chann__693CA210");
 
             entity.HasOne(d => d.User).WithMany(p => p.Subscriptions)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Subscript__UserI__4F7CD00D");
+                .HasConstraintName("FK__Subscript__UserI__68487DD7");
 
             entity.HasOne(d => d.Video).WithMany(p => p.Subscriptions)
                 .HasForeignKey(d => d.VideoId)
-                .HasConstraintName("FK__Subscript__Video__5165187F");
+                .HasConstraintName("FK__Subscript__Video__6A30C649");
         });
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CFA4C8C2326D7");
+            entity.HasKey(e => e.TagId).HasName("PK__Tag__657CFA4CF5598797");
 
             entity.ToTable("Tag");
+
+            entity.HasIndex(e => e.DisplayName, "UQ__Tag__4E3E687D5214A7F9").IsUnique();
 
             entity.Property(e => e.TagId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("TagID");
-            entity.Property(e => e.DisplayName).HasMaxLength(20);
+            entity.Property(e => e.DisplayName).HasMaxLength(30);
         });
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserAcco__1788CCAC9A31188C");
+            entity.HasKey(e => e.UserId).HasName("PK__UserAcco__1788CCACF34299AA");
 
             entity.ToTable("UserAccount");
 
-            entity.HasIndex(e => e.Email, "UQ__UserAcco__A9D1053440589BE3").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__UserAcco__A9D105347CBA16D6").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__UserAcco__C9F28456C138D5B8").IsUnique();
+            entity.HasIndex(e => e.UserName, "UQ__UserAcco__C9F28456ABA20B38").IsUnique();
 
             entity.Property(e => e.UserId)
                 .HasDefaultValueSql("(newid())")
@@ -236,9 +328,35 @@ public partial class YoutubeCloneContext : DbContext
             entity.Property(e => e.UserName).HasMaxLength(20);
         });
 
+        modelBuilder.Entity<UserAccountRole>(entity =>
+        {
+            entity.HasKey(e => e.UserRoleId).HasName("PK__UserAcco__3D978A559AD3B714");
+
+            entity.ToTable("UserAccountRole");
+
+            entity.HasIndex(e => new { e.UserId, e.RoleId }, "UQ_UserAccountRole").IsUnique();
+
+            entity.Property(e => e.UserRoleId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("UserRoleID");
+            entity.Property(e => e.AssignedAt).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.RoleId).HasColumnName("RoleID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserAccountRoles)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserAccou__RoleI__628FA481");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserAccountRoles)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserAccou__UserI__619B8048");
+        });
+
         modelBuilder.Entity<Video>(entity =>
         {
-            entity.HasKey(e => e.VideoId).HasName("PK__Video__BAE5124AF755F0DF");
+            entity.HasKey(e => e.VideoId).HasName("PK__Video__BAE5124AD879CB67");
 
             entity.ToTable("Video");
 
@@ -254,6 +372,9 @@ public partial class YoutubeCloneContext : DbContext
                 .HasColumnName("ThumbnailURL");
             entity.Property(e => e.Title).HasMaxLength(255);
             entity.Property(e => e.VideoAccessibilityId).HasColumnName("VideoAccessibilityID");
+            entity.Property(e => e.VideoUrl)
+                .HasMaxLength(500)
+                .HasColumnName("VideoURL");
 
             entity.HasOne(d => d.Channel).WithMany(p => p.Videos)
                 .HasForeignKey(d => d.ChannelId)
@@ -271,11 +392,11 @@ public partial class YoutubeCloneContext : DbContext
                     r => r.HasOne<Tag>().WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__VideoTags__TagID__797309D9"),
+                        .HasConstraintName("FK__VideoTags__TagID__17036CC0"),
                     l => l.HasOne<Video>().WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__VideoTags__Video__787EE5A0"),
+                        .HasConstraintName("FK__VideoTags__Video__160F4887"),
                     j =>
                     {
                         j.HasKey("VideoId", "TagId").HasName("PK_VideoTags_VideoID_TagID");
@@ -287,7 +408,7 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<VideoAccessibility>(entity =>
         {
-            entity.HasKey(e => e.VideoAccessibilityId).HasName("PK__VideoAcc__259709539C6EDEA0");
+            entity.HasKey(e => e.VideoAccessibilityId).HasName("PK__VideoAcc__25970953BC943AF3");
 
             entity.ToTable("VideoAccessibility");
 
@@ -298,9 +419,11 @@ public partial class YoutubeCloneContext : DbContext
 
         modelBuilder.Entity<VideoReaction>(entity =>
         {
-            entity.HasKey(e => e.VideoReactionId).HasName("PK__VideoRea__BB33D4696E2EF8B1");
+            entity.HasKey(e => e.VideoReactionId).HasName("PK__VideoRea__BB33D46922E48B55");
 
             entity.ToTable("VideoReaction");
+
+            entity.HasIndex(e => new { e.VideoId, e.UserId }, "UQ_VideoReaction").IsUnique();
 
             entity.Property(e => e.VideoReactionId)
                 .HasDefaultValueSql("(newid())")
@@ -313,22 +436,22 @@ public partial class YoutubeCloneContext : DbContext
             entity.HasOne(d => d.ReactionType).WithMany(p => p.VideoReactions)
                 .HasForeignKey(d => d.ReactionTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__VideoReac__React__6477ECF3");
+                .HasConstraintName("FK__VideoReac__React__00200768");
 
             entity.HasOne(d => d.User).WithMany(p => p.VideoReactions)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__VideoReac__UserI__6383C8BA");
+                .HasConstraintName("FK__VideoReac__UserI__7F2BE32F");
 
             entity.HasOne(d => d.Video).WithMany(p => p.VideoReactions)
                 .HasForeignKey(d => d.VideoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__VideoReac__Video__628FA481");
+                .HasConstraintName("FK__VideoReac__Video__7E37BEF6");
         });
 
         modelBuilder.Entity<ViewHistory>(entity =>
         {
-            entity.HasKey(e => e.ViewHistoryId).HasName("PK__ViewHist__55D4BB13704F66A0");
+            entity.HasKey(e => e.ViewHistoryId).HasName("PK__ViewHist__55D4BB13E2C5A943");
 
             entity.ToTable("ViewHistory");
 
@@ -343,12 +466,12 @@ public partial class YoutubeCloneContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.ViewHistories)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ViewHisto__UserI__5629CD9C");
+                .HasConstraintName("FK__ViewHisto__UserI__6EF57B66");
 
             entity.HasOne(d => d.Video).WithMany(p => p.ViewHistories)
                 .HasForeignKey(d => d.VideoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ViewHisto__Video__571DF1D5");
+                .HasConstraintName("FK__ViewHisto__Video__6FE99F9F");
         });
 
         OnModelCreatingPartial(modelBuilder);

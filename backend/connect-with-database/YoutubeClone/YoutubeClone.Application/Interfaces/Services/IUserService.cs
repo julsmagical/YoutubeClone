@@ -1,4 +1,5 @@
-﻿using YoutubeClone.Application.Models.DTOS;
+﻿using System.Security.Claims;
+using YoutubeClone.Application.Models.DTOS;
 using YoutubeClone.Application.Models.Requests.User;
 using YoutubeClone.Application.Models.Responses;
 
@@ -10,7 +11,8 @@ namespace YoutubeClone.Application.Interfaces.Services
         public GenericResponse<List<UserDTO>> GetAll(FilterUserRequest model);
         public Task<GenericResponse<UserDTO>> GetById(Guid userId);
         public Task<GenericResponse<bool>> Delete(Guid userId);
-        public Task<GenericResponse<UserDTO>> Update(Guid id, UpdateUserRequest model);
+        public Task<GenericResponse<UserDTO>> Me(Claim claim);
+        public Task<GenericResponse<UserDTO>> Update(Guid id, UpdateUserRequest model, Claim claim);
         public Task CreateFirstUser();
     }
 }
