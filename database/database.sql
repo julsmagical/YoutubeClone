@@ -223,7 +223,15 @@ INSERT INTO EmailTemplates (Name, Subject, Body) VALUES
 
 ('AUTH_LOGIN_FAILED',
  'Intento de inicio de sesión fallido',
- 'Se intentó iniciar sesión en tu cuenta. Si no fuiste tú, contacta al administrador.');
+ 'Se intent  iniciar sesi n en tu cuenta. Si no fuiste tú , contacta al administrador.'),
+
+('AUTH_REGISTER_EMAIL_VERIFICATION',
+'Verificación de correo - YoutubeClone',
+'Hola, para continuar con su proceso de registro, necesita validar su correo electrónico, haciendo clic en el siguiente <a href="{{url}}">enlace</a>.'),
+
+('AUTH_RECOVER_PASSWORD_OTP',
+'Recuperación de contraseña - YoutubeClone',
+'Hola, el siguiente código le permitirá completar el proceso de cambio de contraseña para su cuenta: <strong>{{otp}}</strong>');
 GO
 
 -- ============================================================
@@ -236,8 +244,9 @@ DECLARE @RoleCreator   UNIQUEIDENTIFIER = NEWID();
 DECLARE @RoleUser      UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO Roles (RoleID, Name, Description) VALUES
-(@RoleSystem,  'Sistema',               'Rol interno. Ejecuta procesos automatizados como envío de correos y asignación inicial de roles. No asignable manualmente.'),
+(@RoleSystem,  'Sistema',               'Rol interno. Ejecuta procesos automatizados como env o de correos y asignación inicial de roles. No asignable manualmente.'),
 (@RoleAdmin,   'Administrador',         'Modera contenido de la plataforma. Puede eliminar videos, suspender canales, verificar creadores y gestionar comentarios.'),
 (@RoleCreator, 'Creador de Contenido',  'Puede subir y gestionar sus propios videos, administrar su canal y crear playlists.'),
 (@RoleUser,    'Usuario',               'Puede ver videos, reaccionar, comentar, suscribirse a canales y gestionar su historial y playlists personales.');
 GO
+
