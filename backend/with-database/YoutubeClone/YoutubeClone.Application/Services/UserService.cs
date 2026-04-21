@@ -89,7 +89,7 @@ namespace YoutubeClone.Application.Services
 
             await uow.SaveChangesAsync();
 
-            return ResponseHelper.Create(Map(create), [], "Usuario creado correctamente.");
+            return ResponseHelper.Create(Map(create));
         }
 
         public async Task<GenericResponse<bool>> Delete(Guid id)
@@ -119,7 +119,7 @@ namespace YoutubeClone.Application.Services
                 .Select(user => Map(user))
                 .ToList();
 
-            return ResponseHelper.Create(users);
+            return ResponseHelper.Create(users, count: queryable.Count());
         }
 
         public async Task<GenericResponse<UserDTO>> GetById(Guid id)
