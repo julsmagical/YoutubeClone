@@ -16,7 +16,7 @@ namespace YoutubeClone.WebApp.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpPost]
-        //[Authorize(Roles = "Sistema")]
+        [Authorize(Roles = RoleConstants.Admin)]
         [EndpointSummary("Crear un usuario")]
         [EndpointDescription("Realiza la creación de un usuario")]
         [ProducesResponseType<GenericResponse<UserDTO>>(StatusCodes.Status201Created)]
@@ -27,7 +27,7 @@ namespace YoutubeClone.WebApp.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "Sistema, Admin")]
+        [Authorize(Roles = RoleConstants.Admin)]
         [EndpointSummary("Elimina un usuario")]
         [EndpointDescription("Elimina un usuario")]
         [ProducesResponseType<GenericResponse<bool>>(StatusCodes.Status200OK)]
@@ -38,7 +38,7 @@ namespace YoutubeClone.WebApp.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize(Roles = RoleConstants.Admin)]
         [EndpointSummary("Obtiene uno o más usuarios")]
         [EndpointDescription("Realiza la petición para obtener uno o más usuarios")]
         [ProducesResponseType<GenericResponse<List<UserDTO>>>(StatusCodes.Status200OK)]
@@ -60,7 +60,7 @@ namespace YoutubeClone.WebApp.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(Roles = "CreadorContenido, Usuario")]
+        [Authorize(Roles = RoleConstants.Admin)]
         [EndpointSummary("Actualizar un usuario")]
         [EndpointDescription("Actualiza la información de un usuario")]
         [ProducesResponseType<GenericResponse<UserDTO>>(StatusCodes.Status204NoContent)]

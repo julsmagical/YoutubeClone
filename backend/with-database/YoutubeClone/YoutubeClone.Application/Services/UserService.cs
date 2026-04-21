@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using System.Security.Claims;
 using YoutubeClone.Application.Helpers;
@@ -108,17 +109,17 @@ namespace YoutubeClone.Application.Services
         {
             var queryable = uow.userRepository.Queryable();
 
-
-
             // paginacion y consultas
-            var users = queryable.Skip(model.Offset).Take(model.Limit).ToList();
+            var users = queryable
+                .Include(user => user.UserAccountRoles)
+                .ThenInclude(userRole => userRole.Role)
+                .AsQueryable()
+                .Skip(model.Offset)
+                .Take(model.Limit)
+                .Select(user => Map(user))
+                .ToList();
 
-            List<UserDTO> mapped = []; //mapear resultado
-            foreach (var user in users)
-            {
-                mapped.Add(Map(user));
-            }
-            return ResponseHelper.Create(mapped);
+            return ResponseHelper.Create(users);
         }
 
         public async Task<GenericResponse<UserDTO>> GetById(Guid id)
