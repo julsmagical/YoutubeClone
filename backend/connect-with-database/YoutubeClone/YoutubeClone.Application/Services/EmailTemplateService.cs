@@ -5,11 +5,11 @@ using YoutubeClone.Domain.Database.SqlServer;
 
 namespace YoutubeClone.Application.Services
 {
-    public class EmailTemplateService(IUnitOfWork uow, EmailTemplateData templateData) : IEmailTemplateService
+    public class EmailTemplateService(IUnitOfWork uow, EmailTemplateData data) : IEmailTemplateService
     {
         public async Task<EmailTemplateDTO> Get(string name, Dictionary<string, string> variables)
         {
-            var template = templateData.Data.First(x => x.Name == name);
+            var template = data.Data.First(x => x.Name == name);
 
             foreach (var variable in variables)
             {
@@ -26,7 +26,7 @@ namespace YoutubeClone.Application.Services
         public async Task Init()
         {
             var templates = await uow.emailTemplateRepository.Get();
-            templateData.Data = templates;
+            data.Data = templates;
         }
     }
 }

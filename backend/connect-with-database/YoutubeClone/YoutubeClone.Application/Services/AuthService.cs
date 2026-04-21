@@ -18,6 +18,34 @@ namespace YoutubeClone.Application.Services
 {
     public class AuthService(IUnitOfWork uow, IUserRepository userRepository, IConfiguration configuration, ICacheService cacheService) : IAuthService
     {
+        // CODIGO TEMPORAL DE PRUEBAS
+        /*public async Task<GenericResponse<LoginAuthResponse>> Login(LoginAuthRequest model)
+        {
+            var userAccount = await uow.userRepository.GetAll(model.Email);
+
+            Console.WriteLine($"=== DEBUG LOGIN ===");
+            Console.WriteLine($"Email buscado: '{model.Email}'");
+            Console.WriteLine($"Usuario encontrado: {userAccount != null}");
+
+            if (userAccount == null)
+                throw new BadRequestException(ResponseConstants.AUTH_USER_OR_PASSWORD_NOT_FOUND);
+
+            Console.WriteLine($"Hash en DB: '{userAccount.Password}'");
+            var validatePassword = Hasher.ComparePassword(model.Password, userAccount.Password);
+            Console.WriteLine($"Password válida: {validatePassword}");
+
+            if (!validatePassword)
+                throw new BadRequestException(ResponseConstants.AUTH_USER_OR_PASSWORD_NOT_FOUND);
+
+            var token = TokenHelper.Create(userAccount.UserId, [.. userAccount.UserAccountRoles.Select(x => x.Role.Name)], configuration, cacheService);
+            var refreshToken = TokenHelper.CreateRefresh(userAccount.UserId, configuration, cacheService);
+
+            return ResponseHelper.Create(new LoginAuthResponse
+            {
+                Token = token,
+                RefreshToken = refreshToken
+            });
+        }*/
         public async Task<GenericResponse<LoginAuthResponse>> Login(LoginAuthRequest model)
         {
             var userAccount = await uow.userRepository.GetAll(model.Email)

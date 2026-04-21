@@ -13,7 +13,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.Theme = ScalarTheme.Mars;
+        options.WithTitle("Youtube Clone");
+    });
     app.MapOpenApi();
 }
 

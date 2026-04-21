@@ -59,9 +59,11 @@ namespace YoutubeClone.WebApp.Extensions
         public async static Task AddSMTP(this IServiceCollection services, IConfiguration configuration)
         {
             var host = Environment.GetEnvironmentVariable(EnvironmentConstants.SMTP_HOST)
+                ?? configuration[ConfigurationConstants.SMTP_HOST]
                 ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.SMTP_HOST));
 
             var from = Environment.GetEnvironmentVariable(EnvironmentConstants.SMTP_FROM)
+                ?? configuration[ConfigurationConstants.SMTP_FROM]
                 ?? throw new Exception(ResponseConstants.ConfigurationPropertyNotFound(ConfigurationConstants.SMTP_FROM));
 
             var portValue = Environment.GetEnvironmentVariable(EnvironmentConstants.SMTP_PORT) ??
@@ -147,9 +149,9 @@ namespace YoutubeClone.WebApp.Extensions
             var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
             await userService.CreateFirstUser();
 
-            var emailTemplateService = scope.ServiceProvider.GetRequiredService<IEmailTemplateService>();
-            await emailTemplateService.Init();
-
+            var emailTemplateRepository = scope.ServiceProvider.GetRequiredService<IEmailTemplateRepository>();
+            templatesData.Data = await emailTemplateRepository.Get();
+            //await emailTemplateService.Init();
         }
 
         public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
