@@ -70,6 +70,14 @@ namespace YoutubeClone.WebApp.Controllers
             return ResponseStatus.Updated(HttpContext, srv);
         }
 
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> Me()
+        {
+            var srv = await userService.Me(UserClaim());
+            return Ok(srv);
+        }
+
         private Claim UserClaim()
         {
             return User.FindFirst(ClaimsConstants.USERACCOUNT_ID)

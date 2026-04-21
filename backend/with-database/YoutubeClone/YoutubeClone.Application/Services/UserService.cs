@@ -266,7 +266,5 @@ namespace YoutubeClone.Application.Services
             var executor = await GetExecutor(claim.Value);
             return ResponseHelper.Create(Map(executor));
         }
-
-
     }
 }
