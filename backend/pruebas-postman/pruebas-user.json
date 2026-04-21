@@ -147,6 +147,14 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Identificar Sesión actual (me)",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
         }
       ]
     },
@@ -223,6 +231,19 @@
                 }
               }
             }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "App",
+      "item": [
+        {
+          "name": "Información de la aplicación",
+          "request": {
+            "method": "GET",
+            "header": []
           },
           "response": []
         }
