@@ -1122,3 +1122,18 @@ FROM [UserAccount] AS [u]
 2026-04-21 11:56:26.162 -05:00 [INF] Executed action YoutubeClone.WebApp.Controllers.UserController.GetAll (YoutubeClone.WebApp) in 711.1182ms
 2026-04-21 11:56:26.175 -05:00 [INF] Executed endpoint 'YoutubeClone.WebApp.Controllers.UserController.GetAll (YoutubeClone.WebApp)'
 2026-04-21 11:56:26.197 -05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5063/api/user - 200 null application/json; charset=utf-8 1085.6536ms
+2026-04-21 22:46:57.795 -05:00 [INF] Executed DbCommand (40ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserAccount] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-04-21 22:46:57.908 -05:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmailTemplateId], [e].[Body], [e].[CreatedAt], [e].[IsActive], [e].[Name], [e].[Subject], [e].[UpdatedAt]
+FROM [EmailTemplates] AS [e]
+2026-04-21 22:46:58.087 -05:00 [INF] User profile is available. Using 'C:\Users\ASUS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-21 22:46:58.222 -05:00 [INF] Now listening on: http://localhost:5063
+2026-04-21 22:46:58.294 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-21 22:46:58.296 -05:00 [INF] Hosting environment: Development
+2026-04-21 22:46:58.297 -05:00 [INF] Content root path: C:\Users\ASUS\Documents\NewWorkspace\YoutubeClone\backend\with-database\YoutubeClone\YoutubeClone.WebApp

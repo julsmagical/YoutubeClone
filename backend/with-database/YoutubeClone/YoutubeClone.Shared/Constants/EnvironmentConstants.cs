@@ -8,7 +8,7 @@
         public const string SMTP_USER = "SMTP_USER";
         public const string SMTP_PASSWORD = "SMTP_PASSWORD";
 
-        public const string CONNECTION_STRING_DATABASE = "CONNECTION_STRINGS_DATABASE";
+        public const string CONNECTION_STRING_DATABASE = "CONNECTION_STRING_DATABASE";
 
         public const string JWT_PRIVATE_KEY = "JWT_PRIVATE_KEY";
         public const string JWT_AUDIENCE = "JWT_AUDIENCE";
