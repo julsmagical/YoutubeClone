@@ -1,0 +1,15 @@
+2026-04-22 08:43:33.691 -05:00 [INF] Executed DbCommand (172ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [UserAccount] AS [u]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-04-22 08:43:34.393 -05:00 [INF] Executed DbCommand (122ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[EmailTemplateId], [e].[Body], [e].[CreatedAt], [e].[IsActive], [e].[Name], [e].[Subject], [e].[UpdatedAt]
+FROM [EmailTemplates] AS [e]
+2026-04-22 08:43:35.081 -05:00 [INF] User profile is available. Using 'C:\Users\HP\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-22 08:43:35.475 -05:00 [INF] Now listening on: http://localhost:5063
+2026-04-22 08:43:35.666 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-22 08:43:35.673 -05:00 [INF] Hosting environment: Development
+2026-04-22 08:43:35.686 -05:00 [INF] Content root path: C:\Users\HP\Documents\workspace\YoutubeClone\backend\with-database\YoutubeClone\YoutubeClone.WebApp
