@@ -12,8 +12,9 @@ CREATE TABLE UserAccount(
 	Email NVARCHAR(255) NOT NULL UNIQUE,
 	DisplayName NVARCHAR (50) NOT NULL,
 	Birthday DATETIME2 NOT NULL,
-	Location NVARCHAR(30) NULL,
+	Location NVARCHAR(30) NOT NULL,
 	Password NVARCHAR(255) NOT NULL,
+    ThemePreference NVARCHAR(20) NOT NULL DEFAULT 'Dark',
 	CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
 	UpdatedAt DATETIME2 NULL,
 	DeletedAt DATETIME2 NULL,
@@ -32,7 +33,30 @@ CREATE TABLE Channel(
 	CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
 	UpdatedAt DATETIME2 NULL,
 	DeletedAt DATETIME2 NULL,
+);
+GO
 
+CREATE TABLE Community(
+    CommunityID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
+    OwnerUserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
+    Name NVARCHAR(100) NOT NULL UNIQUE,
+    Description NVARCHAR(255) NULL,
+    AvatarURL NVARCHAR(255) NULL,
+    BannerURL NVARCHAR(255) NULL,
+    IsPrivate BIT NOT NULL DEFAULT 0,
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt DATETIME2 NULL,
+    DeletedAt DATETIME2 NULL,
+);
+GO
+
+CREATE TABLE CommunityMember(
+    CommunityMemberID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
+    CommunityID UNIQUEIDENTIFIER NOT NULL REFERENCES Community(CommunityID),
+    UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
+    IsModerator BIT NOT NULL DEFAULT 0,
+    JoinedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT UQ_CommunityMember UNIQUE (CommunityID, UserID)
 );
 GO
 
@@ -46,6 +70,7 @@ GO
 CREATE TABLE Video(
     VideoID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
     ChannelID UNIQUEIDENTIFIER NOT NULL REFERENCES Channel(ChannelID),
+    CommunityID UNIQUEIDENTIFIER NULL REFERENCES Community(CommunityID),
     VideoAccessibilityID INT NOT NULL REFERENCES VideoAccessibility(VideoAccessibilityID),
     Title NVARCHAR(255) NOT NULL,
     Description NVARCHAR(255) NULL,
@@ -53,6 +78,7 @@ CREATE TABLE Video(
     ThumbnailURL NVARCHAR(255) NOT NULL,
     VideoURL NVARCHAR(500) NOT NULL, --URL del archivo de video
     AgeRestriction BIT NOT NULL DEFAULT 0,
+    IsPinned BIT NOT NULL DEFAULT 0,
     PublishedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt DATETIME2 NULL,
@@ -116,12 +142,23 @@ CREATE TABLE Subscription(
 );
 GO
 
+CREATE TABLE CommunitySubscription(
+    CommunitySubscriptionID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
+    UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
+    CommunityID UNIQUEIDENTIFIER NOT NULL REFERENCES Community(CommunityID),
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    DeletedAt DATETIME2 NULL,
+    CONSTRAINT UQ_CommunitySubscription UNIQUE (UserID, CommunityID)
+);
+GO
+
 CREATE TABLE ViewHistory(
     ViewHistoryID  UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
     UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
     VideoID UNIQUEIDENTIFIER NOT NULL REFERENCES Video(VideoID),
     CompletionRate DECIMAL NOT NULL DEFAULT 0.0,
 	WatchedSeconds INT NULL,-- reanudar el video donde lo dejo el user
+    LastViewedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
 );
 GO
@@ -176,9 +213,19 @@ CREATE TABLE Playlist(
     Title NVARCHAR(150) NOT NULL,
     Description NVARCHAR(255) NULL,
     IsPublic BIT NOT NULL DEFAULT 1, --publica o privada
+    IsCollaborative BIT NOT NULL DEFAULT 0,
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt DATETIME2 NULL,
     DeletedAt DATETIME2 NULL,
+);
+GO
+
+CREATE TABLE PlaylistContributor(
+    PlaylistContributorID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
+    PlaylistID UNIQUEIDENTIFIER NOT NULL REFERENCES Playlist(PlaylistID),
+    UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
+    AddedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT UQ_PlaylistContributor UNIQUE (PlaylistID, UserID)
 );
 GO
 
@@ -215,23 +262,27 @@ GO
 INSERT INTO EmailTemplates (Name, Subject, Body) VALUES
 ('USER_REGISTER',
  'Bienvenido a YoutubeClone',
- 'Tu cuenta fue creada. Tu contraseÒa es: <strong>{{password}}</strong>'),
+ 'Tu cuenta fue creada. Tu contrase√±a es: <strong>{{password}}</strong>'),
 
 ('AUTH_LOGIN_SUCCESS',
- 'Inicio de sesiÛn exitoso',
- 'Iniciaste sesiÛn el <strong>{{datetime}}</strong>'),
+ 'Inicio de sesi√≥n exitoso',
+ 'Iniciaste sesi√≥n el <strong>{{datetime}}</strong>'),
 
 ('AUTH_LOGIN_FAILED',
- 'Intento de inicio de sesiÛn fallido',
- 'Se intent  iniciar sesi n en tu cuenta. Si no fuiste t˙ , contacta al administrador.'),
+ 'Intento de inicio de sesi√≥n fallido',
+ 'Se intent  iniciar sesi√≥n en tu cuenta. Si no fuiste t√∫ , contacta al administrador.'),
 
 ('AUTH_REGISTER_EMAIL_VERIFICATION',
-'VerificaciÛn de correo - YoutubeClone',
-'Hola, para continuar con su proceso de registro, necesita validar su correo electrÛnico, haciendo clic en el siguiente <a href="{{url}}">enlace</a>.'),
+'Verificaci√≥n de correo - YoutubeClone',
+'Hola, para continuar con su proceso de registro, necesita validar su correo electr√≥nico, haciendo clic en el siguiente <a href="{{url}}">enlace</a>.'),
 
 ('AUTH_RECOVER_PASSWORD_OTP',
-'RecuperaciÛn de contraseÒa - YoutubeClone',
-'Hola, el siguiente cÛdigo le permitir· completar el proceso de cambio de contraseÒa para su cuenta: <strong>{{otp}}</strong>');
+'Recuperaci√≥n de contrase√±a - YoutubeClone',
+'Hola, el siguiente c√≥digo le permitir√° completar el proceso de cambio de contrase√±a para su cuenta: <strong>{{otp}}</strong>'),
+
+('AUTH_PASSWORD_CHANGED',
+'Contrase√±a cambiada con √©xito', 
+'Su contrase√±a ha sido cambiada exitosamente.');
 GO
 
 -- ============================================================
@@ -244,14 +295,14 @@ DECLARE @RoleCreator   UNIQUEIDENTIFIER = NEWID();
 DECLARE @RoleUser      UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO Roles (RoleID, Name, Description) VALUES
-(@RoleSystem,  'Sistema',               'Rol interno. Ejecuta procesos automatizados como env o de correos y asignaciÛn inicial de roles. No asignable manualmente.'),
+(@RoleSystem,  'Sistema',               'Rol interno. Ejecuta procesos automatizados como env o de correos y asignaci√≥n inicial de roles. No asignable manualmente.'),
 (@RoleAdmin,   'Administrador',         'Modera contenido de la plataforma. Puede eliminar videos, suspender canales, verificar creadores y gestionar comentarios.'),
 (@RoleCreator, 'Creador de Contenido',  'Puede subir y gestionar sus propios videos, administrar su canal y crear playlists.'),
 (@RoleUser,    'Usuario',               'Puede ver videos, reaccionar, comentar, suscribirse a canales y gestionar su historial y playlists personales.');
 GO
 
 -- ============================================================
--- DML: Cat·logo de permisos
+-- DML: Cat√°logo de permisos
 -- ============================================================
 
 INSERT INTO Permission (PermissionID, Code, Module, Action, Name, Description)
