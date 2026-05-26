@@ -14,8 +14,8 @@ CREATE TABLE UserAccount(
 	Birthday DATETIME2 NOT NULL,
 	Location NVARCHAR(30) NOT NULL,
 	Password NVARCHAR(255) NOT NULL,
-    ThemePreference NVARCHAR(20) NOT NULL DEFAULT 'Dark',
-	CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    ThemePreference NVARCHAR(20) NOT NULL DEFAULT 'Dark', --ojo
+	CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
 	UpdatedAt DATETIME2 NULL,
 	DeletedAt DATETIME2 NULL,
 );
@@ -133,16 +133,16 @@ GO
 
 CREATE TABLE Subscription(
     SubscriptionID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
-    UserID         UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
-    ChannelID      UNIQUEIDENTIFIER NOT NULL REFERENCES Channel(ChannelID),
-    VideoID        UNIQUEIDENTIFIER NULL     REFERENCES Video(VideoID),
-    CreatedAt      DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    DeletedAt      DATETIME2        NULL,
+    UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
+    ChannelID UNIQUEIDENTIFIER NOT NULL REFERENCES Channel(ChannelID),
+    VideoID UNIQUEIDENTIFIER NULL REFERENCES Video(VideoID),
+    CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    DeletedAt DATETIME2 NULL,
     CONSTRAINT UQ_Subscription UNIQUE (UserID, ChannelID) -- evitar que el user no se suscriba al mismo canal
 );
 GO
 
-CREATE TABLE CommunitySubscription(
+/* CREATE TABLE CommunitySubscription(
     CommunitySubscriptionID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
     UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
     CommunityID UNIQUEIDENTIFIER NOT NULL REFERENCES Community(CommunityID),
@@ -150,7 +150,7 @@ CREATE TABLE CommunitySubscription(
     DeletedAt DATETIME2 NULL,
     CONSTRAINT UQ_CommunitySubscription UNIQUE (UserID, CommunityID)
 );
-GO
+GO */
 
 CREATE TABLE ViewHistory(
     ViewHistoryID  UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
@@ -199,6 +199,7 @@ CREATE TABLE Comment(
 );
 GO
 
+-- para saber si la playlist fue creada por un user o channel
 CREATE TABLE CreatorType(
     CreatorTypeID INT IDENTITY(1, 1) NOT NULL PRIMARY KEY,
     DisplayName NVARCHAR(30) NOT NULL UNIQUE,
@@ -221,26 +222,25 @@ CREATE TABLE Playlist(
 GO
 
 CREATE TABLE PlaylistContributor(
-    PlaylistContributorID UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() PRIMARY KEY,
     PlaylistID UNIQUEIDENTIFIER NOT NULL REFERENCES Playlist(PlaylistID),
     UserID UNIQUEIDENTIFIER NOT NULL REFERENCES UserAccount(UserID),
     AddedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT UQ_PlaylistContributor UNIQUE (PlaylistID, UserID)
+    CONSTRAINT PK_PlaylistContribuitor PRIMARY KEY (PlaylistID, UserID)
 );
 GO
 
-CREATE TABLE VideoTags(
+CREATE TABLE VideoTag(
     VideoID UNIQUEIDENTIFIER NOT NULL REFERENCES Video(VideoID),
     TagID UNIQUEIDENTIFIER NOT NULL REFERENCES Tag(TagID),
-    CONSTRAINT PK_VideoTags_VideoID_TagID PRIMARY KEY (VideoID, TagID),
+    CONSTRAINT PK_VideoTag PRIMARY KEY (VideoID, TagID),
 );
 GO
 
-CREATE TABLE PlaylistVideos(
+CREATE TABLE PlaylistVideo(
     PlaylistID  UNIQUEIDENTIFIER NOT NULL REFERENCES Playlist(PlaylistID),
     VideoID UNIQUEIDENTIFIER NOT NULL REFERENCES Video(VideoID),
     AddedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT PK_PlaylistVideos_PlaylistID_VideoID PRIMARY KEY (PlaylistID, VideoID),
+    CONSTRAINT PK_PlaylistVideo PRIMARY KEY (PlaylistID, VideoID),
 );
 GO
 
